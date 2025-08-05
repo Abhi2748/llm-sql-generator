@@ -75,36 +75,6 @@ streamlit run app.py
 
 - **sample_data.json**: Example e-commerce JSON data for testing and demonstration
 
-## Supported Snowflake JSON Functions
-
-- Path notation: `data:field::string`
-- Nested access: `data:level1.level2::number`
-- Array indexing: `data:array[0]::string`
-- Array flattening: `LATERAL FLATTEN(input => data:array)`
-- Type casting: `::string, ::number, ::boolean, ::date`
-
-## Requirements
-
-- Python 3.8+
-- OpenAI API key
-- Dependencies listed in requirements.txt
-
-## Usage Example
-
-Input: "Extract customer names and their cities from the profile data"
-
-Output:
-```sql
-SELECT
-  raw_data:customers[0].name::string as customer_name,
-  raw_data:customers[0].profile.city::string as city
-FROM customer_data
-```
-
-## Environment Variables
-
-- `OPENAI_API_KEY`: Your OpenAI API key for GPT model access
-
 ## Notes
 
 - The generated SQL is specifically formatted for Snowflake's VARIANT column type
