@@ -1,0 +1,9 @@
+# requirements.txt
+streamlit
+langchain
+langchain-community
+langchain-openai
+langgraph
+openai
+python-dotenv
+sqlparse

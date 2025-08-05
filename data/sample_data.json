@@ -1,0 +1,215 @@
+{
+  "ecommerce_events": [
+    {
+      "event_id": "evt_001",
+      "timestamp": "2024-01-15T10:30:00Z",
+      "event_type": "purchase",
+      "user": {
+        "user_id": "user_123",
+        "email": "customer@example.com",
+        "profile": {
+          "name": "John Smith",
+          "age": 32,
+          "location": {
+            "city": "New York",
+            "state": "NY",
+            "country": "USA",
+            "coordinates": {
+              "lat": 40.7128,
+              "lng": -74.0060
+            }
+          },
+          "preferences": {
+            "currency": "USD",
+            "language": "en",
+            "categories": ["electronics", "books", "clothing"],
+            "notifications": {
+              "email": true,
+              "sms": false,
+              "push": true
+            }
+          }
+        }
+      },
+      "transaction": {
+        "transaction_id": "txn_abc123",
+        "total_amount": 299.99,
+        "currency": "USD",
+        "payment_method": {
+          "type": "credit_card",
+          "brand": "visa",
+          "last_four": "1234"
+        },
+        "items": [
+          {
+            "product_id": "prod_001",
+            "name": "Wireless Headphones",
+            "category": "electronics",
+            "price": 199.99,
+            "quantity": 1,
+            "discount": {
+              "type": "percentage",
+              "value": 10,
+              "code": "SAVE10"
+            },
+            "attributes": {
+              "color": "black",
+              "brand": "TechCorp",
+              "warranty_months": 24
+            }
+          },
+          {
+            "product_id": "prod_002",
+            "name": "Tech Book Bundle",
+            "category": "books", 
+            "price": 49.99,
+            "quantity": 2,
+            "discount": null,
+            "attributes": {
+              "format": "digital",
+              "language": "english",
+              "pages": 450
+            }
+          }
+        ],
+        "shipping": {
+          "method": "express",
+          "cost": 15.99,
+          "address": {
+            "street": "123 Main St",
+            "city": "New York", 
+            "state": "NY",
+            "zip": "10001",
+            "country": "USA"
+          },
+          "tracking": {
+            "number": "TRK123456789",
+            "carrier": "FedEx",
+            "estimated_delivery": "2024-01-17T18:00:00Z"
+          }
+        }
+      },
+      "session": {
+        "session_id": "sess_xyz789",
+        "device": {
+          "type": "desktop",
+          "os": "Windows",
+          "browser": "Chrome",
+          "ip_address": "192.168.1.100"
+        },
+        "referrer": {
+          "source": "google",
+          "medium": "organic",
+          "campaign": null,
+          "keyword": "wireless headphones"
+        },
+        "page_views": [
+          {
+            "page": "/product/wireless-headphones",
+            "timestamp": "2024-01-15T10:25:00Z",
+            "duration_seconds": 120
+          },
+          {
+            "page": "/cart",
+            "timestamp": "2024-01-15T10:27:00Z", 
+            "duration_seconds": 180
+          }
+        ]
+      },
+      "metadata": {
+        "version": "1.2",
+        "source": "web_app",
+        "processed_at": "2024-01-15T10:30:05Z",
+        "tags": ["conversion", "high_value", "repeat_customer"],
+        "experiments": {
+          "checkout_flow": "variant_b",
+          "pricing_test": "control"
+        }
+      }
+    },
+    {
+      "event_id": "evt_002",
+      "timestamp": "2024-01-16T14:45:00Z", 
+      "event_type": "product_view",
+      "user": {
+        "user_id": "user_456",
+        "email": "jane.doe@example.com",
+        "profile": {
+          "name": "Jane Doe",
+          "age": 28,
+          "location": {
+            "city": "Los Angeles",
+            "state": "CA", 
+            "country": "USA",
+            "coordinates": {
+              "lat": 34.0522,
+              "lng": -118.2437
+            }
+          },
+          "preferences": {
+            "currency": "USD",
+            "language": "en",
+            "categories": ["home", "garden", "fitness"],
+            "notifications": {
+              "email": false,
+              "sms": true,
+              "push": false
+            }
+          }
+        }
+      },
+      "product": {
+        "product_id": "prod_003",
+        "name": "Smart Fitness Tracker",
+        "category": "fitness",
+        "price": 129.99,
+        "availability": {
+          "in_stock": true,
+          "quantity": 50,
+          "warehouse": "CA_01"
+        },
+        "reviews": {
+          "average_rating": 4.5,
+          "total_reviews": 1250,
+          "recent_reviews": [
+            {
+              "rating": 5,
+              "comment": "Great product!",
+              "date": "2024-01-10"
+            },
+            {
+              "rating": 4,
+              "comment": "Good value for money",
+              "date": "2024-01-12" 
+            }
+          ]
+        }
+      },
+      "session": {
+        "session_id": "sess_abc456",
+        "device": {
+          "type": "mobile",
+          "os": "iOS",
+          "browser": "Safari",
+          "ip_address": "192.168.2.200"
+        },
+        "referrer": {
+          "source": "facebook",
+          "medium": "social",
+          "campaign": "fitness_campaign_2024",
+          "keyword": null
+        }
+      },
+      "metadata": {
+        "version": "1.2",
+        "source": "mobile_app",
+        "processed_at": "2024-01-16T14:45:03Z",
+        "tags": ["product_discovery", "mobile_user"],
+        "experiments": {
+          "product_recommendations": "variant_a",
+          "ui_layout": "new_design"
+        }
+      }
+    }
+  ]
+}
