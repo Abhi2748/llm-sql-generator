@@ -6,8 +6,7 @@ from typing import Any, Optional, Tuple
 import streamlit as st
 from dotenv import load_dotenv
 
-from core.pipeline import generate_sql_candidates
-from core.schema_index import build_schema_index
+from workflow.graph import run_workflow
 
 load_dotenv()
 
@@ -67,7 +66,7 @@ def _load_repo_sample_json() -> Tuple[Optional[Any], Optional[str]]:
 
 def main():
     st.title("Snowflake JSON SQL Generator")
-    st.caption("Give a JSON sample + a question. You will get 2–3 ranked Snowflake SQL candidates.")
+    st.caption("LangGraph multi-agent workflow. Give a JSON sample + a question. You will get 2–3 ranked Snowflake SQL candidates.")
     
     api_key_valid, api_key_message = check_api_key_status()
     
@@ -107,10 +106,6 @@ def main():
                 st.error(f"Invalid JSON: {e}")
 
     if json_data is not None:
-        idx = build_schema_index(json_data)
-        st.caption(
-            f"Schema summary: root={idx.root_type}, scalar_fields={len(idx.fields)}, arrays={len(idx.arrays)}, root_arrays={list(idx.root_array_keys)}"
-        )
         with st.expander("Preview JSON (collapsed by default)", expanded=False):
             st.json(json_data)
 
@@ -129,17 +124,22 @@ def main():
     if generate:
         with st.spinner("Generating ranked SQL candidates..."):
             try:
-                index, catalog, query_spec, ranked = generate_sql_candidates(
+                result = run_workflow(
                     question=question.strip(),
                     json_sample=json_data,
                     table_name=table_name.strip() or "your_table",
                     json_column=json_column.strip() or "your_variant_column",
-                    api_key=os.getenv("OPENAI_API_KEY"),
-                    model=os.getenv("OPENAI_MODEL"),
+                    max_retries=2,
                 )
             except Exception as e:
                 st.error(f"Generation failed: {e}")
                 return
+
+        ranked = result.get("ranked_candidates") or []
+        query_spec = result.get("query_spec") or {}
+        plan = result.get("plan") or {}
+        schema_summary = result.get("schema_summary") or ""
+        critic_notes = result.get("critic_notes") or {}
 
         if not ranked:
             st.error("No SQL candidates generated.")
@@ -157,20 +157,27 @@ def main():
         chosen = ranked[pick]
 
         st.markdown("### SQL")
-        st.code(format_sql_nicely(chosen.sql), language="sql")
+        st.code(format_sql_nicely(chosen.get("sql") or ""), language="sql")
 
-        if chosen.issues:
+        if chosen.get("issues"):
             with st.expander("Validation notes", expanded=False):
-                for issue in chosen.issues:
+                for issue in chosen.get("issues") or []:
                     st.write("- ", issue)
 
         if show_details:
+            if schema_summary:
+                with st.expander("Schema summary (LLM)", expanded=False):
+                    st.text(schema_summary)
             with st.expander("Assumptions", expanded=False):
-                st.json(chosen.assumptions)
+                st.json(chosen.get("assumptions") or {})
             with st.expander("QuerySpec (LLM output)", expanded=False):
                 st.json(query_spec)
+            with st.expander("Plan (LLM output)", expanded=False):
+                st.json(plan)
+            with st.expander("Critic notes (LLM output)", expanded=False):
+                st.json(critic_notes)
             with st.expander("Paths used (from sample)", expanded=False):
-                st.json(chosen.paths_used)
+                st.json(chosen.get("paths_used") or [])
 
 if __name__ == "__main__":
     main()
