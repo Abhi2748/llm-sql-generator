@@ -2,12 +2,26 @@
 
 ## Overview
 
-An LLM-powered tool that converts natural language queries into Snowflake SQL for querying JSON data stored in VARIANT columns. The application uses OpenAI's GPT models to understand user intent and generate appropriate Snowflake-specific SQL syntax.
+An LLM-powered tool that converts natural language questions into **Snowflake SQL** for querying JSON data stored in **VARIANT** columns.
+
+This project uses a **schema-first workflow**:
+- Build a JSON **schema index** from your sample data
+- Use the LLM only to produce a structured **QuerySpec** (intent), constrained to known JSON paths
+- Deterministically compile and rank **2–3 SQL candidates** to handle ambiguity (doc-per-row vs event-per-row)
 
 ## Project Structure
 
 ```
 /
+├── core/
+│   ├── __init__.py
+│   ├── schema_index.py    # Builds canonical JSON path/type index
+│   ├── field_catalog.py   # Catalog of queryable leaf fields
+│   ├── query_spec.py      # QuerySpec types
+│   ├── intent_agent.py    # LLM: natural language -> QuerySpec (no SQL)
+│   ├── planner.py         # Builds multiple execution plans (flatten strategy)
+│   ├── sql_compiler.py    # Deterministic Snowflake SQL compiler
+│   └── static_validate.py # Static validation + ranking
 ├── agents/
 │   ├── __init__.py
 │   ├── graph_flow.py      # Orchestrates the SQL generation workflow
@@ -27,11 +41,11 @@ An LLM-powered tool that converts natural language queries into Snowflake SQL fo
 
 ## Features
 
-- Natural language to Snowflake SQL conversion
-- JSON structure analysis with path discovery
-- Support for nested objects and arrays
-- LATERAL FLATTEN generation for array processing
-- Snowflake-specific syntax (`:` notation and `::` type casting)
+- Natural language to Snowflake SQL conversion (schema-first)
+- JSON schema indexing with canonical path discovery
+- Multiple ranked SQL candidates to handle row-grain ambiguity
+- Deterministic `LATERAL FLATTEN` generation for arrays
+- Snowflake-specific syntax (`:` traversal and `::` casting)
 - Interactive web interface built with Streamlit
 
 ## Setup
@@ -56,8 +70,8 @@ streamlit run app.py
 
 1. **Input JSON Data**: Provide JSON structure via file upload, paste, or use sample data
 2. **Ask Questions**: Enter natural language queries about what you want to extract
-3. **Generate SQL**: The system analyzes the JSON structure and generates Snowflake SQL
-4. **Review Results**: Get formatted SQL with explanations and JSON paths used
+3. **Generate Candidates**: The system builds a schema index, generates a QuerySpec (intent), then compiles 2–3 SQL candidates with different assumptions
+4. **Review Results**: Pick the top-ranked candidate (or choose an alternate if your table’s row-grain differs)
 
 ## Components
 
@@ -78,5 +92,5 @@ streamlit run app.py
 ## Notes
 
 - The generated SQL is specifically formatted for Snowflake's VARIANT column type
-- Maximum 3 retries for SQL generation if initial attempts fail
-- Web interface provides visual JSON structure exploration
+- No Snowflake connection is required; validation is static (schema-aware)
+- Web interface provides visual JSON structure exploration and multiple SQL candidates
