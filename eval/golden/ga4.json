@@ -1,0 +1,152 @@
+{
+  "schema_file": "data/sample_data_ga4.json",
+  "description": "200 real rows from bigquery-public-data.ga4_obfuscated_sample_ecommerce. Richest/deepest schema of the three - key/value pivot arrays, string-encoded int64 timestamps, and several always-null branches (items[*], ecommerce.*) are all real, deliberate stress tests.",
+  "questions": [
+    {
+      "id": "ga4-01",
+      "question": "Count events by event name.",
+      "targets": ["group_by", "count", "verified_real_distribution"],
+      "expected": {
+        "grain": "document",
+        "group_by": ["events[*]:event_name"],
+        "aggregations": [{"func": "count", "path": null, "alias": "cnt"}],
+        "select": [], "filters": [], "order_by": []
+      },
+      "expected_rows": [
+        {"event_name": "page_view", "cnt": 84},
+        {"event_name": "user_engagement", "cnt": 39},
+        {"event_name": "session_start", "cnt": 28},
+        {"event_name": "first_visit", "cnt": 26},
+        {"event_name": "scroll", "cnt": 17},
+        {"event_name": "view_item", "cnt": 5},
+        {"event_name": "view_promotion", "cnt": 1}
+      ]
+    },
+    {
+      "id": "ga4-02",
+      "question": "How many events came from mobile vs desktop devices?",
+      "targets": ["group_by", "nested_object_field"],
+      "expected": {
+        "grain": "document",
+        "group_by": ["events[*]:device:category"],
+        "aggregations": [{"func": "count", "path": null, "alias": "cnt"}],
+        "select": [], "filters": [], "order_by": []
+      },
+      "expected_rows": [
+        {"category": "mobile", "cnt": 142},
+        {"category": "desktop", "cnt": 58}
+      ]
+    },
+    {
+      "id": "ga4-03",
+      "question": "List the top 5 countries by event count.",
+      "targets": ["group_by", "order_by_limit", "REGRESSION: fixed in Phase 0"],
+      "expected": {
+        "grain": "document",
+        "group_by": ["events[*]:geo:country"],
+        "aggregations": [{"func": "count", "path": null, "alias": "cnt"}],
+        "select": [], "filters": [],
+        "order_by": [{"expr_alias": "cnt", "direction": "desc"}],
+        "limit": 5
+      },
+      "expected_rows": [
+        {"country": "United States", "cnt": 106},
+        {"country": "Brazil", "cnt": 18},
+        {"country": "Japan", "cnt": 15},
+        {"country": "France", "cnt": 12},
+        {"country": "Canada", "cnt": 9}
+      ]
+    },
+    {
+      "id": "ga4-04",
+      "question": "List the user pseudo id and country for every view_item event.",
+      "targets": ["filter_eq", "simple_select"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:user_pseudo_id", "events[*]:geo:country"],
+        "filters": [{"path": "events[*]:event_name", "op": "eq", "value": "view_item"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_row_count": 5
+    },
+    {
+      "id": "ga4-05",
+      "question": "What page was viewed in each page_view event?",
+      "targets": ["KNOWN_LIMITATION: key/value pivot array pattern"],
+      "known_limitation": true,
+      "expected_behavior": "The page URL lives at events[*]:event_params[*] where key='page_location', and the actual value is at .value.string_value - i.e. you must FILTER an array of {key, value} objects to find the row where key equals a specific string, then project one nested field from the matching element. QuerySpec has no way to express 'find array element where key=X' - only static paths and flatten. Expect the pipeline to either hallucinate a direct events[*]:page_location path (which doesn't exist), or fail to produce anything meaningful. This is a real, common JSON pattern (GA4, Segment, feature-flag systems, EAV models all do this) worth adding first-class support for as a genuine v2 feature, not a prompt-engineering patch.",
+      "expected_rows": null
+    },
+    {
+      "id": "ga4-06",
+      "question": "List the continent for every event that happened in Brazil.",
+      "targets": ["filter_eq", "nested_object_field"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:geo:continent"],
+        "filters": [{"path": "events[*]:geo:country", "op": "eq", "value": "Brazil"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows_note": "18 rows, all continent='Americas'"
+    },
+    {
+      "id": "ga4-07",
+      "question": "What currency is used for user lifetime value?",
+      "targets": ["simple_select", "low_information_sanity_check"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:user_ltv:currency"],
+        "filters": [], "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows_note": "All 200 rows return 'USD' - low-information but a good sanity check that deep nested paths resolve."
+    },
+    {
+      "id": "ga4-08",
+      "question": "How many events have no user id set?",
+      "targets": ["KNOWN_LIMITATION: NULL comparison semantics"],
+      "known_limitation": true,
+      "expected_rows": [{"cnt": 200}],
+      "notes": "user_id is NULL on all 200 rows (this sample never has authenticated users). The compiler's eq filter with value=None currently emits '= NULL', which in Snowflake's three-valued logic never matches anything (correct SQL is IS NULL). A filter for 'no user id' will silently return zero rows instead of all 200 unless the compiler special-cases null-valued eq/neq into IS NULL / IS NOT NULL."
+    },
+    {
+      "id": "ga4-09",
+      "question": "List the top 3 traffic source names by number of events.",
+      "targets": ["group_by", "order_by_limit"],
+      "expected": {
+        "grain": "document",
+        "group_by": ["events[*]:traffic_source:name"],
+        "aggregations": [{"func": "count", "path": null, "alias": "cnt"}],
+        "select": [], "filters": [],
+        "order_by": [{"expr_alias": "cnt", "direction": "desc"}],
+        "limit": 3
+      },
+      "expected_rows": [
+        {"name": "(organic)", "cnt": 67},
+        {"name": "(direct)", "cnt": 49},
+        {"name": "<Other>", "cnt": 42}
+      ]
+    },
+    {
+      "id": "ga4-10",
+      "question": "List the purchase revenue for each transaction.",
+      "targets": ["ADVERSARIAL: field exists but is structurally always-null in this sample"],
+      "adversarial": true,
+      "expected_behavior": "ecommerce:purchase_revenue exists in the schema (it's a real GA4 field) but is null on all 200 rows in this LIMIT-200 slice (no purchase events happened to be included). A technically-valid query returns 200 NULLs, which is misleading dressed up as an answer. A better pipeline either notes in 'notes' that this field appears entirely empty in the sample, or the critic flags it as suspicious given zero non-null values.",
+      "expected_rows_note": "0 non-null purchase_revenue values across all 200 rows"
+    },
+    {
+      "id": "ga4-11",
+      "question": "Order events by their timestamp, most recent first, and show the top 5.",
+      "targets": ["type_cast_correctness", "order_by_limit", "string_encoded_number"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:event_name", "events[*]:event_timestamp"],
+        "filters": [], "group_by": [],
+        "aggregations": [],
+        "order_by": [{"expr_alias": "event_timestamp", "direction": "desc"}],
+        "limit": 5
+      },
+      "notes": "event_timestamp is a large epoch-microsecond integer, but arrives in the JSON sample as a JSON string (BigQuery's int64-to-JSON convention) - so schema_index infers type='string'. Correct behavior requires the intent agent to still choose cast:number (since it's numerically comparable data, not text) despite the inferred schema type saying string. Sorting as a string would still happen to work here since all values are the same digit-length, but that's incidental, not correct - a good pipeline reasons about the field's actual nature, not just the inferred type label."
+    }
+  ]
+}

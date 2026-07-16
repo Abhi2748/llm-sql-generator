@@ -1,0 +1,186 @@
+{
+  "schema_file": "data/sample_data.json",
+  "description": "2 events (1 purchase, 1 product_view). Deliberately small — every answer here is hand-verifiable against the raw JSON.",
+  "questions": [
+    {
+      "id": "ecom-01",
+      "question": "List the event id and user email for each event.",
+      "targets": ["doc_grain", "simple_select"],
+      "expected": {
+        "grain": "document",
+        "select": ["ecommerce_events[*]:event_id", "ecommerce_events[*]:user:email"],
+        "filters": [], "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows": [
+        {"event_id": "evt_001", "email": "customer@example.com"},
+        {"event_id": "evt_002", "email": "jane.doe@example.com"}
+      ]
+    },
+    {
+      "id": "ecom-02",
+      "question": "What is the total amount for each purchase event?",
+      "targets": ["filter_eq", "event_grain"],
+      "expected": {
+        "grain": "event",
+        "select": ["ecommerce_events[*]:event_id", "ecommerce_events[*]:transaction:total_amount"],
+        "filters": [{"path": "ecommerce_events[*]:event_type", "op": "eq", "value": "purchase"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows": [{"event_id": "evt_001", "total_amount": 299.99}]
+    },
+    {
+      "id": "ecom-03",
+      "question": "List all item names and prices in the transaction for evt_001.",
+      "targets": ["item_grain", "two_level_nested_flatten", "REGRESSION: nested alias bug fixed in Phase 0"],
+      "expected": {
+        "grain": "item",
+        "select": ["ecommerce_events[*]:transaction:items[*]:name", "ecommerce_events[*]:transaction:items[*]:price"],
+        "filters": [{"path": "ecommerce_events[*]:event_id", "op": "eq", "value": "evt_001"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows": [
+        {"name": "Wireless Headphones", "price": 199.99},
+        {"name": "Tech Book Bundle", "price": 49.99}
+      ],
+      "notes": "This is the exact shape of query that triggered the nested-flatten alias bug found in Phase 0. If it regresses, expr_for_path is broken again."
+    },
+    {
+      "id": "ecom-04",
+      "question": "What is the total price of all items sold, and how many items were there?",
+      "targets": ["item_grain", "aggregation_sum_count"],
+      "expected": {
+        "grain": "item",
+        "select": [],
+        "filters": [],
+        "group_by": [],
+        "aggregations": [
+          {"func": "sum", "path": "ecommerce_events[*]:transaction:items[*]:price", "alias": "total_price"},
+          {"func": "count", "path": null, "alias": "item_count"}
+        ],
+        "order_by": []
+      },
+      "expected_rows": [{"total_price": 249.98, "item_count": 2}]
+    },
+    {
+      "id": "ecom-05",
+      "question": "What is the total revenue from all items, accounting for quantity purchased?",
+      "targets": ["KNOWN_LIMITATION: cross-field arithmetic in aggregation"],
+      "known_limitation": true,
+      "expected_rows": [{"total_revenue": 299.97}],
+      "notes": "199.99*1 + 49.99*2 = 299.97. The current QuerySpec/aggregation schema only supports a single func(path) per aggregation entry - there's no way to express price*quantity. Expect the pipeline to either ignore quantity (wrong answer: 249.98) or fail to produce a valid aggregation. This is a genuine spec gap, not something the LLM should be expected to work around."
+    },
+    {
+      "id": "ecom-06",
+      "question": "List the tags associated with each event.",
+      "targets": ["scalar_array_flatten"],
+      "expected": {
+        "grain": "event",
+        "select": ["ecommerce_events[*]:event_id", "ecommerce_events[*]:metadata:tags[*]"],
+        "filters": [], "group_by": [], "aggregations": [], "order_by": []
+      },
+      "notes": "tags[*] is an array of plain strings, not objects - tests that flattening resolves to the bare flattened alias with no trailing colon-path.",
+      "expected_rows": [
+        {"event_id": "evt_001", "tag": "conversion"},
+        {"event_id": "evt_001", "tag": "high_value"},
+        {"event_id": "evt_001", "tag": "repeat_customer"},
+        {"event_id": "evt_002", "tag": "product_discovery"},
+        {"event_id": "evt_002", "tag": "mobile_user"}
+      ]
+    },
+    {
+      "id": "ecom-07",
+      "question": "What is the average review rating for evt_002?",
+      "targets": ["nested_array_aggregation", "avg"],
+      "expected": {
+        "grain": "item",
+        "select": [],
+        "filters": [{"path": "ecommerce_events[*]:event_id", "op": "eq", "value": "evt_002"}],
+        "group_by": [],
+        "aggregations": [{"func": "avg", "path": "ecommerce_events[*]:product:reviews:recent_reviews[*]:rating", "alias": "avg_rating"}],
+        "order_by": []
+      },
+      "expected_rows": [{"avg_rating": 4.5}]
+    },
+    {
+      "id": "ecom-08",
+      "question": "List events with a total amount greater than $100.",
+      "targets": ["filter_gt", "REGRESSION: fixed in Phase 0"],
+      "expected": {
+        "grain": "event",
+        "select": ["ecommerce_events[*]:event_id"],
+        "filters": [{"path": "ecommerce_events[*]:transaction:total_amount", "op": "gt", "value": 100, "cast": "number"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows": [{"event_id": "evt_001"}]
+    },
+    {
+      "id": "ecom-09",
+      "question": "List events where the event type is purchase or product_view.",
+      "targets": ["filter_in", "REGRESSION: fixed in Phase 0"],
+      "expected": {
+        "grain": "event",
+        "select": ["ecommerce_events[*]:event_id", "ecommerce_events[*]:event_type"],
+        "filters": [{"path": "ecommerce_events[*]:event_type", "op": "in", "value": ["purchase", "product_view"]}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows": [
+        {"event_id": "evt_001", "event_type": "purchase"},
+        {"event_id": "evt_002", "event_type": "product_view"}
+      ]
+    },
+    {
+      "id": "ecom-10",
+      "question": "Find items whose category contains 'elect'.",
+      "targets": ["filter_contains", "item_grain"],
+      "expected": {
+        "grain": "item",
+        "select": ["ecommerce_events[*]:transaction:items[*]:name"],
+        "filters": [{"path": "ecommerce_events[*]:transaction:items[*]:category", "op": "contains", "value": "elect"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows": [{"name": "Wireless Headphones"}]
+    },
+    {
+      "id": "ecom-11",
+      "question": "What is the single most expensive item, and its price?",
+      "targets": ["order_by_limit", "REGRESSION: fixed in Phase 0"],
+      "expected": {
+        "grain": "item",
+        "select": ["ecommerce_events[*]:transaction:items[*]:name", "ecommerce_events[*]:transaction:items[*]:price"],
+        "filters": [], "group_by": [],
+        "aggregations": [],
+        "order_by": [{"expr_alias": "price", "direction": "desc"}],
+        "limit": 1
+      },
+      "expected_rows": [{"name": "Wireless Headphones", "price": 199.99}]
+    },
+    {
+      "id": "ecom-12",
+      "question": "What city and country is the customer in for evt_001?",
+      "targets": ["deep_object_path", "no_array"],
+      "expected": {
+        "grain": "document",
+        "select": ["ecommerce_events[*]:user:profile:location:city", "ecommerce_events[*]:user:profile:location:country"],
+        "filters": [{"path": "ecommerce_events[*]:event_id", "op": "eq", "value": "evt_001"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows": [{"city": "New York", "country": "USA"}]
+    },
+    {
+      "id": "ecom-13",
+      "question": "List the shipping carrier used for each event.",
+      "targets": ["ADVERSARIAL: hallucination_guard"],
+      "adversarial": true,
+      "expected_behavior": "There is no shipping/carrier field anywhere in the schema. The pipeline should NOT invent a path. Either it should refuse/flag ambiguity in notes, or static_validate should catch an unknown path and the critic should retry toward removing it rather than the run silently returning plausible-looking garbage.",
+      "expected_rows": null
+    },
+    {
+      "id": "ecom-14",
+      "question": "How many items were purchased?",
+      "targets": ["AMBIGUOUS: grain ambiguity"],
+      "ambiguous": true,
+      "expected_behavior": "Two defensible readings: (a) count of item rows = 2, (b) sum of quantities = 3 (1+2). A good pipeline either picks one and states the assumption in notes/grain_hint, or the plan agent offers both as separate candidates. A bad pipeline picks one silently with no indication it was a judgment call.",
+      "plausible_answers": [{"item_row_count": 2}, {"total_quantity": 3}]
+    }
+  ]
+}

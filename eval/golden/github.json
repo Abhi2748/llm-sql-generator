@@ -1,0 +1,139 @@
+{
+  "schema_file": "data/sample_data_github.json",
+  "description": "90 deduped real events from the GitHub public events API (5 pulls, deduped by id). Real distribution: 81 PushEvent, 6 CreateEvent, 3 DeleteEvent. No Issue/PR/Watch events showed up in this pull - see ecom-13-style adversarial question below for how that's used deliberately.",
+  "questions": [
+    {
+      "id": "gh-01",
+      "question": "List the actor login and repo name for each event.",
+      "targets": ["doc_grain", "simple_select", "volume"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:actor:login", "events[*]:repo:name"],
+        "filters": [], "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_row_count": 90
+    },
+    {
+      "id": "gh-02",
+      "question": "How many events are there of each type?",
+      "targets": ["group_by", "count", "verified_real_distribution"],
+      "expected": {
+        "grain": "document",
+        "select": [],
+        "filters": [],
+        "group_by": ["events[*]:type"],
+        "aggregations": [{"func": "count", "path": null, "alias": "cnt"}],
+        "order_by": []
+      },
+      "expected_rows": [
+        {"type": "PushEvent", "cnt": 81},
+        {"type": "CreateEvent", "cnt": 6},
+        {"type": "DeleteEvent", "cnt": 3}
+      ]
+    },
+    {
+      "id": "gh-03",
+      "question": "Which actor has the most events, and how many?",
+      "targets": ["group_by", "order_by_limit", "REGRESSION: fixed in Phase 0"],
+      "expected": {
+        "grain": "document",
+        "select": [],
+        "filters": [],
+        "group_by": ["events[*]:actor:login"],
+        "aggregations": [{"func": "count", "path": null, "alias": "cnt"}],
+        "order_by": [{"expr_alias": "cnt", "direction": "desc"}],
+        "limit": 1
+      },
+      "expected_rows": [{"login": "github-actions[bot]", "cnt": 8}]
+    },
+    {
+      "id": "gh-04",
+      "question": "List all Create events with their ref_type and description.",
+      "targets": ["filter_eq", "type_variant_field"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:payload:ref_type", "events[*]:payload:description"],
+        "filters": [{"path": "events[*]:type", "op": "eq", "value": "CreateEvent"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_row_count": 6,
+      "notes": "payload shape genuinely differs by event type (this is why root_array + variant payload matters) - CreateEvent has ref_type/master_branch/description, PushEvent doesn't have description at all, DeleteEvent doesn't have master_branch/description."
+    },
+    {
+      "id": "gh-05",
+      "question": "Which repos have more than one event?",
+      "targets": ["KNOWN_LIMITATION: post-aggregation filter (HAVING)"],
+      "known_limitation": true,
+      "expected_rows": [{"repo": "glbxp6vmpf17/uekhyn", "cnt": 2}],
+      "notes": "QuerySpec has no concept of a post-aggregation filter (SQL HAVING) - 'filters' only compiles to WHERE, which runs before GROUP BY. A correct answer needs HAVING cnt > 1. Expect the pipeline to either drop this constraint entirely (returning ALL repos) or incorrectly push it into WHERE (which would fail to compile, since a raw field can't be compared to an aggregate pre-grouping). This is a genuine QuerySpec schema gap worth adding order_by/limit's sibling: a 'having' block."
+    },
+    {
+      "id": "gh-06",
+      "question": "Which organization is associated with each event, if any?",
+      "targets": ["sparse_optional_field"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:id", "events[*]:org:login"],
+        "filters": [], "group_by": [], "aggregations": [], "order_by": []
+      },
+      "notes": "org is only present on 10/90 events in the sample the schema was inferred from. The other 80 rows should return NULL for org:login at query time (Snowflake variant colon-traversal on a missing key is NULL, not an error) - this tests that the compiler doesn't require every sampled path to exist on every row.",
+      "expected_row_count": 90
+    },
+    {
+      "id": "gh-07",
+      "question": "List push events created after 2026-07-16T04:49:04Z.",
+      "targets": ["filter_gt", "timestamp", "REGRESSION: fixed in Phase 0"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:id", "events[*]:created_at"],
+        "filters": [
+          {"path": "events[*]:type", "op": "eq", "value": "PushEvent"},
+          {"path": "events[*]:created_at", "op": "gt", "value": "2026-07-16T04:49:04Z", "cast": "timestamp"}
+        ],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_row_count": 26,
+      "notes": "Real pulls happened within a ~90-second window (2026-07-16T04:47:46Z to 04:49:20Z) since the public firehose moves fast - this cutoff is the real midpoint of the actual data, not an arbitrary guess."
+    },
+    {
+      "id": "gh-08",
+      "question": "What branch (ref) was pushed in each push event?",
+      "targets": ["simple_select", "filter_eq"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:id", "events[*]:payload:ref"],
+        "filters": [{"path": "events[*]:type", "op": "eq", "value": "PushEvent"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_row_count": 81
+    },
+    {
+      "id": "gh-09",
+      "question": "List delete events and whether a branch or a tag was deleted.",
+      "targets": ["filter_eq", "small_result_set"],
+      "expected": {
+        "grain": "document",
+        "select": ["events[*]:id", "events[*]:payload:ref_type"],
+        "filters": [{"path": "events[*]:type", "op": "eq", "value": "DeleteEvent"}],
+        "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_row_count": 3
+    },
+    {
+      "id": "gh-10",
+      "question": "List the number of comments on each issue.",
+      "targets": ["ADVERSARIAL: hallucination_guard - no data of this type exists at all"],
+      "adversarial": true,
+      "expected_behavior": "There are zero IssuesEvent/IssueCommentEvent rows in this dataset and no 'comments' field anywhere in the schema index. The pipeline should not fabricate an issues/comments path. Correct behavior: empty result, or an explicit note that no matching data/fields exist - NOT a plausible-looking query against nonexistent paths.",
+      "expected_rows": null
+    },
+    {
+      "id": "gh-11",
+      "question": "How active is each repo?",
+      "targets": ["AMBIGUOUS: undefined metric"],
+      "ambiguous": true,
+      "expected_behavior": "'Active' isn't defined. A reasonable pipeline defaults to event count per repo and says so in notes/grain_hint, rather than guessing at a more exotic interpretation (e.g. time-weighted activity, which isn't supported by anything in this QuerySpec anyway).",
+      "plausible_answers": [{"repo": "glbxp6vmpf17/uekhyn", "event_count": 2}]
+    }
+  ]
+}
