@@ -1,73 +1,113 @@
-# Snowflake JSON SQL Generator
+# JSON → Snowflake SQL
 
-## Overview
+Turn a natural-language question and a sample of JSON stored in a Snowflake
+VARIANT column into ranked, validated SQL — using a deterministic compiler over
+an LLM-populated intermediate representation, not an LLM freehanding SQL text.
 
-An LLM-focused tool that converts natural language questions into **Snowflake SQL** for querying JSON data stored in **VARIANT** columns.
+**[Live demo →](https://llm-sql-generator.vercel.app/)** · **[Architecture decisions →](docs/decisions/)** · **[Full findings →](docs/FINDINGS.md)**
 
-This project is built as a **LangGraph multi-agent workflow**:
-- **SchemaIndex node (deterministic)**: extracts canonical JSON paths, types, and arrays from a sample
-- **SchemaSummarizer agent (LLM)**: compresses schema into a short human-readable summary
-- **Intent agent (LLM)**: question → structured `QuerySpec` JSON (select/filters/group/aggregations)
-- **Plan agent (LLM)**: chooses 2–3 candidate strategies (doc-per-row vs event-per-row vs item grain)
-- **SQLCompiler node (deterministic)**: compiles each plan into Snowflake SQL (`LATERAL FLATTEN`, `:` traversal, `::` casts)
-- **StaticValidate node (deterministic)**: scores/ranks candidates and explains issues
-- **Critic + Repair agents (LLM)**: critique and optionally patch QuerySpec/plan with a retry loop
+## Why this exists
 
-## Project Structure
+Most "AI SQL generator" tools ask a model to write SQL directly. That works for
+flat tables and falls apart on the case that actually matters in production:
+deeply nested JSON, arrays inside arrays, and sparse fields that only show up on
+some rows. This project takes a different approach — an LLM extracts *intent*
+into a small structured spec; deterministic code compiles that spec into
+syntactically correct Snowflake SQL (`:` traversal, `::` casts, chained
+`LATERAL FLATTEN` for nested arrays). Every candidate ships with a validation
+score and a named list of what's wrong, checked against the real schema — not a
+black box.
+
+## What it does
+
+- Infers a schema from a small JSON sample — the same sample size the UI itself
+  asks for, not an idealized large export
+- Generates 2–3 ranked SQL candidates per question, each scored by a
+  deterministic validator (real path checks, `LATERAL FLATTEN` coverage,
+  `GROUP BY`/aggregation shape checks — not string heuristics)
+- Escalates to an LLM critic only when deterministic validation actually finds
+  something wrong — measured at **1.52 mean LLM calls per query**, against
+  2.0 for a single-shot-plus-self-critique baseline on the same model
+- Supports conversational correction — tell it what's wrong in plain English
+  ("that's the wrong field, I want the tracking carrier") and it corrects the
+  same query instead of starting over
+- Costs an estimated **100–570x less** per query than Snowflake's own native
+  text-to-SQL offering (Cortex Analyst), for the same scope of work — see
+  [ADR 0004](docs/decisions/0004-cost-benchmark-vs-snowflake-cortex-analyst.md)
+
+## Results
+
+Measured against a hand-verified golden set of **38 questions** (29 scored
+structurally, 9 adversarial/ambiguous/known-limitation cases tested but not
+numerically scored) across 3 real JSON schemas — a synthetic e-commerce sample,
+real GitHub Events API data, and real GA4 BigQuery public sample data — not
+curated to flatter the system:
+
+| | Single-shot baseline | Baseline + self-critique | This pipeline |
+|---|---|---|---|
+| Structural correctness (approx.) | 93.7% | 95.1% | **97.0%** |
+| Mean LLM calls / query | 1.0 | 2.0 | **1.52** |
+
+**12 real bugs** were found and permanently fixed through live testing that a
+fully green unit-test suite did not catch — including a nested-array SQL
+compilation bug, a silent `GROUP BY` data-loss bug, a fan-out/double-counting
+aggregation bug, and a retry-exhaustion failure that reported success when it
+hadn't actually resolved anything. Every one has a permanent regression test.
+Full writeup, including the ones that took multiple rounds to root-cause
+properly: [`docs/FINDINGS.md`](docs/FINDINGS.md).
+
+**Known limitations**, found and documented rather than hidden: cross-field
+arithmetic in aggregations, post-aggregation (`HAVING`-style) filtering, and
+key/value pivot-array patterns (common in GA4/Segment-style event schemas) are
+not yet supported by the query spec — scoped as future work, not silently
+unsupported.
+
+## Architecture
+
+Seven pipeline stages, two kinds of trust: some stages reason about intent (LLM
+calls), everything downstream of intent is deterministic, independently
+unit-tested code.
 
 ```
-/
-├── workflow/
-│   ├── state.py           # LangGraph state
-│   ├── graph.py           # LangGraph build + run
-│   ├── llm.py             # LLM config + robust JSON extraction
-│   ├── prompt_loader.py   # Loads prompts from prompts/
-│   └── nodes/             # Deterministic + LLM agent nodes
-├── prompts/               # Prompt templates for each LLM agent role
-├── data/
-│   └── sample_data.json   # Sample JSON data for testing
-├── tests/                 # Offline tests (and a mocked-LLM graph test)
-├── app.py                 # Streamlit web application
-├── .env                   # Environment variables (API keys)
-├── .env.example           # Template for environment setup
-├── requirements.txt       # Python dependencies
-└── README.md
+schema_index → summarizer → intent → plan → compile → validate → [critic]
+   (det.)        (LLM)       (LLM)   (det.)   (det.)     (det.)   (conditional)
 ```
 
-## Features
+Full reasoning for every major architectural decision — including alternatives
+considered and why they were rejected — is in [`docs/decisions/`](docs/decisions/):
 
-- LangGraph multi-agent workflow (schema summarizer, intent, planner, critic, repair)
-- Deterministic Snowflake SQL compilation (`LATERAL FLATTEN`, `:` traversal, `::` casts)
-- Multiple ranked candidates to handle row-grain ambiguity
-- No Snowflake connection required (static validation + LLM critique/repair)
-- Simple Streamlit UI
+- [0001](docs/decisions/0001-deterministic-compiler-vs-llm-sql.md) — deterministic compiler vs. LLM-generated SQL
+- [0002](docs/decisions/0002-pipeline-consolidation-and-tiered-critic.md) — pipeline consolidation for cost/latency
+- [0003](docs/decisions/0003-deterministic-repair-patch-application.md) — deterministic repair, not a second LLM call
+- [0004](docs/decisions/0004-cost-benchmark-vs-snowflake-cortex-analyst.md) — cost vs. Snowflake's native equivalent
 
-## Setup
+## Stack
 
-1. Clone the repository
+Python · LangGraph · FastAPI · gpt-4o-mini · Snowflake VARIANT/`LATERAL FLATTEN` ·
+vanilla HTML/CSS/JS frontend · pytest
 
-2. Install dependencies:
+Deployed on Google Cloud Run (backend) and Vercel (frontend).
+
+## Running it locally
+
 ```bash
 pip install -r requirements.txt
+cp .env.example .env   # add your OPENAI_API_KEY
+
+# backend
+uvicorn api.index:app --reload --port 8000
+
+# frontend (separate terminal)
+cd public && python -m http.server 5500
 ```
 
-3. Configure OpenAI API key:
-   - Copy `.env.example` to `.env`
-   - Add your OpenAI API key: `OPENAI_API_KEY=your_actual_key_here`
+Open `http://localhost:5500/console.html`.
 
-4. Run the application:
+## Tests
+
 ```bash
-streamlit run app.py
+pytest tests/
 ```
 
-## How It Works
-
-1. **Input JSON Data**: Provide JSON structure via file upload, paste, or use sample data
-2. **Ask Questions**: Enter natural language queries about what you want to extract
-3. **LangGraph Workflow Runs**: schema index → schema summary → intent → plan → compile → validate → critic/repair loop
-4. **Review Results**: Pick the top-ranked candidate (or choose an alternate if your table’s row-grain differs)
-
-## Notes
-
-- The generated SQL is specifically formatted for Snowflake's VARIANT column type
-- No Snowflake connection is required; validation is static + agent critique/repair
+**61 tests, all deterministic/fake-LLM (no API key required, no network calls),
+runtime under 1 second.**

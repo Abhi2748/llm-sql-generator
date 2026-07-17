@@ -30,6 +30,27 @@ class TestIntentAgentNormalization(unittest.TestCase):
             any("bare string path normalized" in n for n in spec["normalization_notes"])
         )
 
+    def test_normalizes_bare_string_aggregation_entries(self):
+        raw = {
+            "select": [],
+            "filters": [],
+            "group_by": [],
+            "aggregations": ["events[*]:id"],
+            "order_by": [],
+            "limit": 5,
+            "grain_hint": "document",
+            "notes": "",
+        }
+        spec = normalize_query_spec(raw)
+        self.assertEqual(len(spec["aggregations"]), 1)
+        agg = spec["aggregations"][0]
+        self.assertEqual(agg["func"], "count")
+        self.assertEqual(agg["path"], "events[*]:id")
+        self.assertEqual(agg["alias"], "id")
+        self.assertTrue(
+            any("bare string path normalized" in n for n in spec["normalization_notes"])
+        )
+
     def test_leaves_well_formed_spec_unchanged(self):
         raw = {
             "select": [

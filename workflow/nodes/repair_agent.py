@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from ..llm import LLM
 from ..state import WorkflowState
+from .intent_agent import normalize_query_spec
 
 
 def _coerce_in_filter_value(value: Any) -> Tuple[Optional[list], str]:
@@ -85,7 +86,9 @@ def apply_repair_patch(
 
     Patch wins for keys it specifies; existing values win for keys it omits.
     Malformed ``in`` filter values in the patch are coerced or rejected (see
-    ``_sanitize_filters_in_patch``).
+    ``_sanitize_filters_in_patch``). Always runs ``normalize_query_spec`` on the
+    merged result so bare-string select/aggregation entries from a patch cannot
+    reach ``compile_candidate_sql`` (shared by the repair loop and chat correction).
 
     Returns (new_query_spec, new_plan, sanitize_notes).
     """
@@ -107,7 +110,7 @@ def apply_repair_patch(
         qs_patch["filters"] = sanitized_filters
         sanitize_notes.extend(filter_notes)
 
-    new_query_spec = {**query_spec, **qs_patch}
+    new_query_spec = normalize_query_spec({**query_spec, **qs_patch})
     new_plan = {**plan, **plan_patch}
     return new_query_spec, new_plan, sanitize_notes
 

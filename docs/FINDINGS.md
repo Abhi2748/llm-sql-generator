@@ -358,7 +358,70 @@ project's build window); Snowflake overhauled AI pricing in April 2026.
   catalog programmatically before asserting a field doesn't exist — a partial
   manual read is not verification.
 
-## 13. If asked "what would you do differently"
+## 13. Scalar-array crash — a latent bug finally exercised by a specific combination
+
+A full-scale comparison run crashed on "List the tags associated with each
+event" (`metadata:tags[*]`, an array of plain strings — the one golden question
+deliberately testing scalar-array flattening, distinct from every other array
+in the golden set, which holds objects). Root-caused via the same repro-first
+discipline as every other bug this session: **not** a scalar-array handling bug
+at all — `derive_candidates` → `compile_candidate_sql` → `rank_candidates`
+handled the scalar array correctly on the deterministic path. The actual crash
+(`'str' object has no attribute 'get'`) was in `compile_candidate_sql`, hit only
+when a repair/critic patch introduced a bare string into `aggregations` (or
+`select`). `normalize_query_spec` — added earlier specifically to coerce
+malformed LLM output — only ran on the intent agent's initial output, never on
+the result of `apply_repair_patch` (ADR 0003). A latent gap since ADR 0003
+landed, only exercised now because this specific question happened to route
+through the critic/repair path on a low-probability retry.
+
+**Fixed at the single correct choke point**: `normalize_query_spec` now runs
+inside `apply_repair_patch` itself, so every caller (the automated repair loop
+*and* chat corrections) is covered by one fix rather than two parallel patches.
+Live-verified across 5 repeated attempts (this bug's manifestation was
+retry-path-dependent, so a single clean run wasn't sufient evidence) — zero
+crashes, including one run that legitimately exercised the critic/repair path
+without incident.
+
+## 14. A false positive we chose not to fix — documented, not silently accepted
+
+A full-scale degradation study run surfaced a real, recurring pattern (7 of 32
+rows): a candidate correctly self-heals a duplicate-alias collision (the
+compiler drops the redundant raw `SELECT` in favor of the aggregation, exactly
+as designed), but the informational message describing that auto-fix
+(`"Dropped select '<x>' because it duplicates an aggregation alias"`) remains
+in the issues list, which the retry logic reads as "still needs fixing." The
+critic can't fix something already resolved, retries exhaust, and
+`retry_exhausted_unresolved` gets reported on SQL that was actually fine —
+wasting 2 LLM calls and producing a misleadingly alarming flag on a correct
+result.
+
+**Decision: left as-is, not fixed.** This is a real classification gap (an
+informational auto-heal note is being treated with the same severity as a
+genuine unresolved issue) with a real cost (wasted retries on ~22% of the
+degradation study's rows) — but it doesn't produce incorrect SQL, and fixing it
+properly means distinguishing issue severity/type throughout `static_validate`,
+which is real scope, not a quick patch. Recorded here explicitly rather than
+silently tolerated, so anyone reading the numbers in `README.md` knows this
+specific inflation exists and why it wasn't chased.
+
+## 15. Final measured numbers (not estimates) — a full-scale run, all fixes applied
+
+Distinct from ADR 0002's cost *estimates*: this is what the eval harness
+actually measured, across 38 golden questions (29 scored, 9
+adversarial/ambiguous/known-limitation) and a full 4-tier degradation study,
+after every fix in this document had landed:
+
+| | Baseline A | Baseline B | This pipeline |
+|---|---|---|---|
+| Structural correctness (approx.) | 93.7% | 95.1% | **97.0%** |
+| Mean LLM calls / query | 1.0 | 2.0 | **1.52** |
+
+61 tests, all deterministic, 0.82s total runtime. 12 distinct real bugs found
+and permanently fixed over the course of this project, the majority only
+surfaced through live testing that a fully passing unit-test suite did not and
+structurally could not catch.
+
 
 - Build the live-sanity-check discipline in *before* writing the first line of
   the redesigned pipeline, not after the first round of "tests pass, ship it"
@@ -370,3 +433,20 @@ project's build window); Snowflake overhauled AI pricing in April 2026.
 - When a fix's retry loop exhausts without success, that needs to change the
   final report, not disappear into it — "gave up" and "succeeded" must never
   look identical (see §9).
+
+## 16. If asked "what would you do differently"
+
+- Build the live-sanity-check discipline in *before* writing the first line of
+  the redesigned pipeline, not after the first round of "tests pass, ship it"
+  turned out to be wrong.
+- Connect version control before making any changes, not partway through.
+- When writing adversarial/known-absent test cases, dump the *complete* field
+  catalog programmatically before asserting a field doesn't exist - a partial
+  manual read is not verification.
+- When a fix's retry loop exhausts without success, that needs to change the
+  final report, not disappear into it - "gave up" and "succeeded" must never
+  look identical.
+- Fixes belong at the single correct choke point a value passes through, not
+  scattered at each call site that happens to trigger the symptom - this
+  session hit that lesson twice, independently, in two different subsystems
+  (the repair-patch merge, and query_spec normalization after a patch).

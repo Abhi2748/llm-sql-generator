@@ -17,9 +17,11 @@ def _alias_from_path(path: str) -> str:
 
 def normalize_query_spec(spec: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Validate and normalize QuerySpec shape from the intent LLM.
-    Coerces unambiguous malformations (e.g. bare string select paths) and records
-  what was changed in normalization_notes.
+    Validate and normalize QuerySpec shape.
+
+    Used after the intent LLM and after every ``apply_repair_patch`` merge so
+    bare-string select/aggregation entries never reach ``compile_candidate_sql``.
+    Coerces unambiguous malformations and records changes in normalization_notes.
     """
     out = dict(spec)
     notes: List[str] = list(out.get("normalization_notes") or [])
@@ -53,6 +55,12 @@ def normalize_query_spec(spec: Dict[str, Any]) -> Dict[str, Any]:
         return None
 
     def _norm_aggregation(name: str, i: int, item: Any) -> Dict[str, Any] | None:
+        if isinstance(item, str) and item:
+            # Mirror select: bare string is a field path. Default to count(path),
+            # the unambiguous aggregation shape that always compiles.
+            notes.append(f"{name}[{i}]: bare string path normalized to dict")
+            alias = _alias_from_path(item) or "count_value"
+            return {"func": "count", "path": item, "alias": alias, "cast": None}
         if isinstance(item, dict) and item.get("func"):
             return dict(item)
         notes.append(f"{name}[{i}]: dropped invalid entry ({type(item).__name__})")
