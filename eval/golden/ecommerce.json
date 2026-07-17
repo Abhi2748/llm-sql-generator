@@ -155,6 +155,28 @@
       "expected_rows": [{"name": "Wireless Headphones", "price": 199.99}]
     },
     {
+      "id": "ecom-16",
+      "question": "Which product review has the highest rating, and what does it say?",
+      "targets": [
+        "order_by_limit",
+        "REGRESSION: plain top-N must not use MAX+GROUP BY (companion to ecom-11)"
+      ],
+      "expected": {
+        "grain": "item",
+        "select": [
+          "ecommerce_events[*]:product:reviews:recent_reviews[*]:rating",
+          "ecommerce_events[*]:product:reviews:recent_reviews[*]:comment"
+        ],
+        "filters": [],
+        "group_by": [],
+        "aggregations": [],
+        "order_by": [{"expr_alias": "rating", "direction": "desc"}],
+        "limit": 1
+      },
+      "expected_rows": [{"rating": 5, "comment": "Great product!"}],
+      "notes": "Same failure category as ecom-11: a plain single top item with no 'per <group>' qualifier. Correct shape is order_by+limit on raw review fields — not MAX(rating) GROUP BY comment (or folding rating into group_by). Verified against evt_002 recent_reviews: ratings 5 and 4; the 5-star 'Great product!' review wins."
+    },
+    {
       "id": "ecom-12",
       "question": "What city and country is the customer in for evt_001?",
       "targets": ["deep_object_path", "no_array"],
@@ -169,11 +191,29 @@
     {
       "id": "ecom-13",
       "question": "List the shipping carrier used for each event.",
-      "targets": ["ADVERSARIAL: hallucination_guard"],
+      "targets": ["SEMANTIC_GROUNDING: adjacent-field trap, not hallucination"],
+      "corrected_2026_07_16": "Originally written as an adversarial (no-such-field) test based on an incomplete inspection of the raw fixture - transaction:shipping:tracking:carrier is a REAL field (value 'FedEx' on evt_001). A live run caught the actual failure mode: the LLM selected the real-but-wrong transaction:shipping:method (value 'express') and aliased it as 'shipping_carrier', which structural path-validation cannot catch since the path is legitimate. This is now a semantic-grounding test, not a hallucination test.",
+      "expected": {
+        "grain": "document",
+        "select": ["ecommerce_events[*]:event_id", "ecommerce_events[*]:transaction:shipping:tracking:carrier"],
+        "filters": [], "group_by": [], "aggregations": [], "order_by": []
+      },
+      "expected_rows": [
+        {"event_id": "evt_001", "carrier": "FedEx"},
+        {"event_id": "evt_002", "carrier": null}
+      ],
+      "notes": "evt_002 is a product_view with no transaction object at all, so carrier should be NULL, not omitted. A pipeline that selects shipping:method instead of shipping:tracking:carrier is exhibiting the exact grounding failure this question now exists to catch - correct SQL syntax, correct existing path, wrong field for the question asked."
+    },
+    {
+      "id": "ecom-15",
+      "question": "Was each item gift-wrapped, and is there a loyalty points balance on the account?",
+      "targets": ["ADVERSARIAL: hallucination_guard - verified against full 81-field catalog"],
       "adversarial": true,
-      "expected_behavior": "There is no shipping/carrier field anywhere in the schema. The pipeline should NOT invent a path. Either it should refuse/flag ambiguity in notes, or static_validate should catch an unknown path and the critic should retry toward removing it rather than the run silently returning plausible-looking garbage.",
+      "verified_absent": "Confirmed absent by dumping the complete field_catalog (81 fields, catalog_limit=200) from the real schema_index built off data/sample_data.json - no gift_wrap, gift-wrap, loyalty, or points field exists anywhere in the schema.",
+      "expected_behavior": "The pipeline should not fabricate paths for either concept. Correct behavior: empty/no select for these fields, or an explicit note that no matching fields exist in the schema - not a plausible-looking invented path like items[*]:gift_wrapped or user:loyalty_points.",
       "expected_rows": null
     },
+
     {
       "id": "ecom-14",
       "question": "How many items were purchased?",

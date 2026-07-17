@@ -1,0 +1,34 @@
+.git
+.gitignore
+.env
+.env.*
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+node_modules/
+
+# Not needed to serve the API
+tests/
+eval/
+public/
+docs/
+scripts/
+data/
+baseline/
+*.md
+!.dockerignore
+
+# Local / IDE
+.cursor/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+
+# Streamlit demo (not part of the Cloud Run API)
+app.py

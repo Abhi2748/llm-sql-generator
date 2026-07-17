@@ -12,6 +12,10 @@ per request minimum (`schema_summarizer` → `intent_agent` → `plan_agent` →
 again) — is doing proportionate work for its cost and latency, or whether some of it
 is spending an LLM call on something deterministic code could do for free.
 
+> **Update (ADR 0003):** `repair_agent` is no longer an LLM call — it deterministically
+> merges the critic's `query_spec_patch` / `plan_patch`. Worst-case redesigned call
+> counts below reflect that change.
+
 ## Decision
 
 Three changes to the pipeline:
@@ -46,16 +50,20 @@ Using this project's actual default model (`gpt-4o-mini`, per
 | Current, no retry | 4 | $0.0011 | $114 |
 | Current, 1 retry | 6 | $0.0018 | $182 |
 | Redesigned, best case (schema cached, validation clean) | 1 | $0.00035 | $35 |
-| Redesigned, worst case (schema not cached, 1 retry) | 4 | $0.0014 | $141 |
+| Redesigned, worst case (schema not cached, 1 retry) — as of ADR 0002 (repair still LLM) | 4 | $0.0014 | $141 |
+| Redesigned, worst case (schema not cached, 1 retry) — after ADR 0003 (repair deterministic) | 3 | $0.00105 | $105 |
 
-Best case is a ~69% cost reduction. The more operationally important number is
-sequential LLM round-trips: 1 instead of 4 in the common case, which is a direct
-latency win for whoever's waiting on the response — the dollar figure is the easier
-number to say out loud, but latency is what a user actually feels.
+Worst-case breakdown after ADR 0003: `schema_summary` + `intent_agent` + `critic_agent`
+(+ free deterministic repair) + `critic_agent` again = **3** LLM calls.
+
+Best case is a ~69% cost reduction vs the pre-0002 baseline. The more operationally
+important number is sequential LLM round-trips: 1 instead of 4 in the common case,
+which is a direct latency win for whoever's waiting on the response — the dollar
+figure is the easier number to say out loud, but latency is what a user actually feels.
 
 These are estimates from approximate token counts, not measurements. Real numbers
 require instrumenting token usage per node (see Consequences below) — the estimate
-is directionally trustworthy (4-6 calls vs 1-4 calls is not sensitive to the exact
+is directionally trustworthy (4-6 calls vs 1-3 calls is not sensitive to the exact
 token assumptions) but should be replaced with measured data once available.
 
 ## Alternatives considered

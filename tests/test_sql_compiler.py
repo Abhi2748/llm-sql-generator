@@ -154,6 +154,46 @@ class TestSQLCompiler(unittest.TestCase):
         self.assertIn("ORDER BY cnt DESC", sql)
         self.assertIn("LIMIT 5", sql)
 
+    def test_count_aggregation_omits_cast_on_path(self):
+        query_spec = {
+            "select": [],
+            "filters": [],
+            "group_by": ["events[*]:geo:country"],
+            "aggregations": [
+                {
+                    "func": "count",
+                    "path": "events[*]:event_name",
+                    "alias": "event_count",
+                    "cast": "number",
+                }
+            ],
+            "order_by": [],
+            "limit": 5,
+        }
+        candidate = {
+            "name": "CandidateA_DocPerRow",
+            "row_model": "doc_per_row",
+            "grain": "document",
+            "flatten_arrays": ["events[*]"],
+            "path_rewrite": {"strip_root_array_key": None},
+            "notes": "",
+        }
+        schema_fields = {
+            "events[*]:event_name": {"type": "string"},
+            "events[*]:geo:country": {"type": "string"},
+        }
+        compiled = compile_candidate_sql(
+            schema_fields=schema_fields,
+            candidate=candidate,
+            query_spec=query_spec,
+            table_name="ga4",
+            json_column="raw_data",
+        )
+        sql = compiled["sql"]
+        self.assertIn("COUNT(event:event_name)", sql)
+        self.assertNotIn("COUNT(event:event_name::number)", sql)
+        self.assertNotIn("COUNT(event:event_name::string)", sql)
+
 
 if __name__ == "__main__":
     unittest.main()

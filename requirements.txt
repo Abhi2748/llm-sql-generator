@@ -1,8 +1,10 @@
-# requirements.txt
-streamlit
+# Runtime deps for the FastAPI / LangGraph API (Cloud Run + local uvicorn).
+# Streamlit (app.py demo) is optional and not installed here — keep the image lean.
 langchain
 langchain-community
 langchain-openai
 langgraph
 openai
 python-dotenv
+fastapi
+uvicorn

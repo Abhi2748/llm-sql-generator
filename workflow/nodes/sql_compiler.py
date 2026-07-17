@@ -129,7 +129,7 @@ def compile_candidate_sql(
                 expr_path = stripped
         return schema_path, expr_path
 
-    def expr_for_path(path: str, cast: Optional[str]) -> str:
+    def expr_for_path(path: str, cast: Optional[str], *, skip_cast: bool = False) -> str:
         schema_path, expr_path = normalize_path(path)
         paths_used.append(schema_path)
 
@@ -158,41 +158,51 @@ def compile_candidate_sql(
         else:
             expr = f"{base_alias}:{_strip_star(rel_path)}"
 
-        c = _path_cast(schema_fields, schema_path, cast)
-        if c != "variant":
-            expr = f"{expr}::{c}"
+        if not skip_cast:
+            c = _path_cast(schema_fields, schema_path, cast)
+            if c != "variant":
+                expr = f"{expr}::{c}"
         return expr
 
-    # SELECT items + aggregations
+    # SELECT items + aggregations (tracked separately for GROUP BY validation)
     select_items: List[str] = []
     select_aliases: List[str] = []
+    select_exprs: List[str] = []
+    select_paths: List[str] = []
     for s in (query_spec.get("select") or []):
         p = s.get("path")
         if not p:
             continue
         alias = s.get("alias") or p.split(":")[-1].replace("[*]", "")
+        expr = expr_for_path(p, s.get("cast"))
+        select_paths.append(p)
         select_aliases.append(alias)
-        select_items.append(f"{expr_for_path(p, s.get('cast'))} AS {alias}")
+        select_exprs.append(expr)
+        select_items.append(f"{expr} AS {alias}")
 
     agg_items: List[str] = []
+    agg_aliases: List[str] = []
+    aggregations_declared: List[Dict[str, Any]] = []
     for a in (query_spec.get("aggregations") or []):
         func = (a.get("func") or "").lower()
         alias = a.get("alias") or f"{func}_value"
         if func == "count" and not a.get("path"):
-            select_aliases.append(alias)
+            agg_aliases.append(alias)
             agg_items.append(f"COUNT(*) AS {alias}")
+            aggregations_declared.append({"func": func, "path": None, "alias": alias})
         else:
             p = a.get("path")
             if not p:
                 issues.append(f"Aggregation {func} missing path")
                 continue
-            select_aliases.append(alias)
-            agg_items.append(f"{func.upper()}({expr_for_path(p, a.get('cast'))}) AS {alias}")
-
-    all_select = select_items + agg_items
-    if not all_select:
-        issues.append("No select fields or aggregations inferred.")
-        all_select = ["v0 AS raw_variant"]
+            agg_aliases.append(alias)
+            aggregations_declared.append({"func": func, "path": p, "alias": alias})
+            if func == "count":
+                # COUNT only needs non-null presence; do not cast the counted path.
+                inner = expr_for_path(p, None, skip_cast=True)
+                agg_items.append(f"COUNT({inner}) AS {alias}")
+            else:
+                agg_items.append(f"{func.upper()}({expr_for_path(p, a.get('cast'))}) AS {alias}")
 
     def _literal_sql(val: Any) -> str:
         if isinstance(val, str):
@@ -236,17 +246,54 @@ def compile_candidate_sql(
         else:
             issues.append(f"Unrecognized filter op '{op}'")
 
+    group_by_raw: List[str] = [
+        g for g in (query_spec.get("group_by") or []) if isinstance(g, str) and g
+    ]
     group_exprs: List[str] = []
-    for g in (query_spec.get("group_by") or []):
-        if not isinstance(g, str):
-            continue
-        if ":" in g or "[*]" in g:
-            group_exprs.append(expr_for_path(g, None))
-        else:
-            group_exprs.append(g)
+    if agg_items:
+        for g in group_by_raw:
+            if ":" in g or "[*]" in g:
+                group_exprs.append(expr_for_path(g, None))
+            else:
+                group_exprs.append(g)
+    elif group_by_raw:
+        issues.append(
+            "Ignored group_by because aggregations is empty (GROUP BY without aggregates is invalid)."
+        )
+
+    # Drop SELECT columns whose alias collides with an aggregation alias (redundant raw column).
+    if agg_aliases:
+        agg_alias_set = set(agg_aliases)
+        kept_items = []
+        kept_aliases = []
+        kept_exprs = []
+        kept_paths = []
+        for item, alias, expr, path in zip(
+            select_items, select_aliases, select_exprs, select_paths
+        ):
+            if alias in agg_alias_set:
+                issues.append(
+                    f"Dropped select '{alias}' because it duplicates an aggregation alias."
+                )
+                continue
+            kept_items.append(item)
+            kept_aliases.append(alias)
+            kept_exprs.append(expr)
+            kept_paths.append(path)
+        select_items, select_aliases, select_exprs, select_paths = (
+            kept_items,
+            kept_aliases,
+            kept_exprs,
+            kept_paths,
+        )
+
+    all_select = select_items + agg_items
+    if not all_select:
+        issues.append("No select fields or aggregations inferred.")
+        all_select = ["v0 AS raw_variant"]
 
     order_clauses: List[str] = []
-    known_aliases = set(select_aliases)
+    known_aliases = set(select_aliases) | set(agg_aliases)
     for o in (query_spec.get("order_by") or []):
         if not isinstance(o, dict):
             continue
@@ -296,6 +343,16 @@ def compile_candidate_sql(
         },
         "paths_used": uniq_paths,
         "issues": issues,
+        # Structured SELECT/GROUP BY shape for static_validate (avoid regex on SQL).
+        "select_items": select_items,
+        "agg_items": agg_items,
+        "group_exprs": group_exprs,
+        "select_aliases": select_aliases,
+        "select_exprs": select_exprs,
+        "select_paths": select_paths,
+        "agg_aliases": agg_aliases,
+        "aggregations_declared": aggregations_declared,
+        "group_by_declared": group_by_raw,
     }
 
 

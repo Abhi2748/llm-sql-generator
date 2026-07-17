@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JSON → SQL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12141A;
+    --bg-raised:#181B22;
+    --bg-card:#1D202A;
+    --paper:#EDE9DC;
+    --paper-dim:#9B9A8E;
+    --brass:#D6A44E;
+    --brass-bg:#2b2413;
+    --indigo:#7C93E0;
+    --indigo-bg:#1a2036;
+    --flag:#E0685A;
+    --flag-bg:#2c1815;
+    --line:#2A2E38;
+    --line-soft:#20232C;
+    --font-display:'Fraunces', serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--paper); font-family:var(--font-body); line-height:1.5; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 40px;}
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  header{position:sticky; top:0; background:rgba(18,20,26,0.88); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); z-index:20;}
+  header .wrap{display:flex; align-items:center; justify-content:space-between; height:64px;}
+  .mark{display:flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:600; font-size:14px;}
+  .mark .glyph{width:26px; height:26px; border-radius:5px; background:var(--brass); color:var(--bg); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;}
+  nav{display:flex; gap:30px;}
+  nav a{font-size:13.5px; color:var(--paper-dim); text-decoration:none; font-weight:500;}
+  nav a:hover{color:var(--paper);}
+  .btn-console{background:var(--brass); color:var(--bg); border:none; border-radius:6px; padding:9px 18px; font-size:13px; font-weight:600; font-family:var(--font-mono); text-decoration:none;}
+
+  .hero{padding:110px 0 76px; position:relative; overflow:hidden;}
+  .hero::before{
+    content:''; position:absolute; top:-220px; left:8%;
+    width:700px; height:500px; background:radial-gradient(ellipse, rgba(214,164,78,0.09) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .hero .grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:64px; align-items:center; position:relative;}
+  .eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--brass); margin-bottom:20px; display:flex; align-items:center; gap:10px;}
+  .eyebrow::before{content:''; width:20px; height:1px; background:var(--brass);}
+  h1{font-family:var(--font-display); font-weight:500; font-size:54px; line-height:1.07; letter-spacing:-0.01em; margin-bottom:24px;}
+  h1 em{font-style:italic; color:var(--brass); font-weight:500;}
+  .hero p.lede{font-size:17px; color:var(--paper-dim); max-width:490px; margin-bottom:22px; line-height:1.65;}
+  .hero .cost-line{
+    display:inline-flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:13px;
+    color:var(--brass); background:var(--brass-bg); border-radius:20px; padding:8px 16px; margin-bottom:32px;
+  }
+  .hero .cost-line .dot{width:6px; height:6px; border-radius:50%; background:var(--brass);}
+  .ctas{display:flex; gap:14px;}
+  .btn-primary{background:var(--brass); color:var(--bg); border:none; border-radius:7px; padding:13px 24px; font-size:14.5px; font-weight:600; text-decoration:none; display:inline-block;}
+  .btn-secondary{border:1px solid var(--line); border-radius:7px; padding:13px 24px; font-size:14.5px; font-weight:500; color:var(--paper); text-decoration:none; display:inline-block;}
+
+  .unfold{background:var(--bg-card); border:1px solid var(--line); border-radius:12px; padding:28px; font-family:var(--font-mono); font-size:13px;}
+  .unfold .json{color:var(--paper-dim); line-height:1.75; white-space:pre;}
+  .unfold .json .k{color:var(--indigo);}
+  .unfold .json .arr{color:var(--brass); font-weight:600;}
+  .unfold-arrow{display:flex; align-items:center; gap:10px; margin:16px 0; color:var(--paper-dim); font-size:11px;}
+  .unfold-arrow .line{flex:1; height:1px; background:repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px);}
+  table.flat{width:100%; border-collapse:collapse; font-size:12.5px;}
+  table.flat th{text-align:left; font-weight:600; color:var(--brass); padding:6px 8px; border-bottom:1.5px solid var(--brass); font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;}
+  table.flat td{padding:6px 8px; border-bottom:1px solid var(--line); color:var(--paper);}
+  table.flat tr:last-child td{border-bottom:none;}
+
+  .section{padding:84px 0; border-bottom:1px solid var(--line-soft);}
+  .section-head{max-width:600px; margin-bottom:44px;}
+  h2{font-family:var(--font-display); font-size:34px; font-weight:500; margin-bottom:12px; letter-spacing:-0.005em;}
+  .section-head p{color:var(--paper-dim); font-size:15.5px; line-height:1.6;}
+
+  /* ---------- why / benefits grid ---------- */
+  .benefits{display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .benefit{background:var(--bg-card); padding:30px 26px;}
+  .benefit .glyph{
+    width:38px; height:38px; border-radius:9px; background:var(--brass-bg); color:var(--brass);
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:15px; font-weight:700;
+    margin-bottom:18px;
+  }
+  .benefit h3{font-family:var(--font-display); font-size:18px; font-weight:500; margin-bottom:8px;}
+  .benefit p{font-size:13.5px; color:var(--paper-dim); line-height:1.6;}
+  .benefit.highlight{background:linear-gradient(155deg, var(--brass-bg), var(--bg-card) 60%);}
+  .benefit.highlight .glyph{background:var(--brass); color:var(--bg);}
+
+  /* ---------- console preview ---------- */
+  .console{display:grid; grid-template-columns:340px 1fr; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--bg-raised);}
+  .console-input{padding:26px; border-right:1px solid var(--line);}
+  .field{margin-bottom:20px;}
+  .field label{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--paper-dim); margin-bottom:7px;}
+  .field .val{font-family:var(--font-mono); font-size:12.5px; background:var(--bg); border:1px solid var(--line); border-radius:5px; padding:9px 10px; color:var(--paper);}
+  .console-cta{display:flex; align-items:center; justify-content:space-between; margin-top:24px; padding-top:20px; border-top:1px solid var(--line);}
+  .console-cta p{font-size:12px; color:var(--paper-dim); max-width:180px; line-height:1.5;}
+  .console-cta a{font-family:var(--font-mono); font-size:12.5px; color:var(--brass); text-decoration:none; font-weight:600; white-space:nowrap;}
+  .console-output{padding:26px;}
+  .candidate{border:1px solid var(--line); border-radius:8px; margin-bottom:16px; overflow:hidden; background:var(--bg-card);}
+  .candidate:last-child{margin-bottom:0;}
+  .candidate-head{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--line);}
+  .candidate-name{font-family:var(--font-mono); font-size:13px; font-weight:600;}
+  .stamp{font-family:var(--font-mono); font-size:11.5px; font-weight:600; padding:3px 10px; border-radius:20px; border:1px solid var(--brass); color:var(--brass);}
+  .stamp.flagged{border-color:var(--flag); color:var(--flag);}
+  .sql-block{font-family:var(--font-mono); font-size:12px; padding:16px; line-height:1.7; overflow-x:auto; white-space:pre; color:#c9c5b5;}
+  .sql-block .kw{color:var(--indigo);}
+  .sql-block .str{color:var(--brass);}
+  .issue-row{padding:9px 16px; font-size:11.5px; font-family:var(--font-mono); color:var(--flag); background:var(--flag-bg); border-top:1px solid var(--line);}
+
+  /* ---------- correction demo strip ---------- */
+  .correction{border:1px solid var(--line); border-radius:12px; background:var(--bg-card); overflow:hidden;}
+  .correction-turn{display:flex; gap:16px; padding:16px 22px; align-items:flex-start;}
+  .correction-turn:not(:last-child){border-bottom:1px solid var(--line);}
+  .correction-turn .who{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--paper-dim); width:60px; flex-shrink:0; padding-top:2px;}
+  .correction-turn.user .who{color:var(--indigo);}
+  .correction-turn.fix .who{color:var(--brass);}
+  .correction-msg{font-size:13.5px; color:var(--paper); line-height:1.55;}
+  .correction-field{font-family:var(--font-mono); font-size:12px; color:var(--paper-dim); margin-top:6px;}
+  .correction-field .old{color:var(--flag); text-decoration:line-through;}
+  .correction-field .new{color:var(--brass);}
+
+  /* ---------- pipeline ---------- */
+  .pipeline-track{display:flex; gap:2px; margin-bottom:28px; flex-wrap:wrap;}
+  .stage{flex:1; min-width:120px; padding:16px 14px; border:1px solid var(--line); background:var(--bg-card); position:relative;}
+  .stage:not(:last-child)::after{content:'→'; position:absolute; right:-13px; top:50%; transform:translateY(-50%); color:var(--paper-dim); font-size:13px; z-index:1; background:var(--bg); width:16px; text-align:center;}
+  .stage .tag{font-family:var(--font-mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.05em; padding:2px 7px; border-radius:3px; display:inline-block; margin-bottom:9px; font-weight:600;}
+  .tag.det{background:var(--brass-bg); color:var(--brass);}
+  .tag.llm{background:var(--indigo-bg); color:var(--indigo);}
+  .tag.cond{background:transparent; border:1px dashed var(--line); color:var(--paper-dim);}
+  .stage .name{font-family:var(--font-mono); font-size:12.5px; font-weight:600; margin-bottom:4px;}
+  .stage .desc{font-size:11.5px; color:var(--paper-dim); line-height:1.4;}
+  .legend{display:flex; gap:24px; font-size:12px; color:var(--paper-dim); font-family:var(--font-mono); flex-wrap:wrap;}
+  .legend span{display:flex; align-items:center; gap:6px;}
+  .legend .dot{width:9px; height:9px; border-radius:2px;}
+
+  .cta-final{text-align:center; padding:96px 0;}
+  .cta-final h2{max-width:560px; margin:0 auto 12px;}
+  .cta-final p{color:var(--paper-dim); font-size:15px; margin-bottom:32px;}
+
+  footer{padding:36px 0;}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center;}
+  footer p, footer a{font-size:12.5px; color:var(--paper-dim); font-family:var(--font-mono); text-decoration:none;}
+  footer .links{display:flex; gap:20px;}
+
+  @media (max-width:860px){
+    .hero .grid{grid-template-columns:1fr;}
+    .console{grid-template-columns:1fr;}
+    .console-input{border-right:none; border-bottom:1px solid var(--line);}
+    .benefits{grid-template-columns:1fr;}
+    .pipeline-track{flex-direction:column;}
+    .stage:not(:last-child)::after{display:none;}
+    h1{font-size:38px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="mark"><span class="glyph">{}</span> json→sql</div>
+    <nav>
+      <a href="#why">Why this</a>
+      <a href="#console">Console</a>
+      <a href="#pipeline">How it works</a>
+    </nav>
+    <a class="btn-console" href="console.html">Open console ↗</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap grid">
+    <div>
+      <div class="eyebrow reveal in">Snowflake · VARIANT · LangGraph</div>
+      <h1 class="reveal in">Nested JSON in.<br>SQL you can <em>verify</em>. Out.</h1>
+      <p class="lede reveal in">Paste a sample, ask a question in plain English, get back ranked SQL — each candidate scored against your actual schema, with the reasoning shown, not hidden.</p>
+      <div class="cost-line reveal in"><span class="dot"></span>Runs for a fraction of what Snowflake's own native text-to-SQL service charges for the same thing</div>
+      <div class="ctas reveal in">
+        <a class="btn-primary" href="console.html">Try it on your own JSON</a>
+        <a class="btn-secondary" href="#why">Why not just ask an LLM?</a>
+      </div>
+    </div>
+    <div class="unfold reveal in">
+      <div class="json"><span class="k">"transaction"</span>: {
+  <span class="k">"items"</span>: <span class="arr">[</span>
+    { <span class="k">"name"</span>: "Wireless Headphones", <span class="k">"price"</span>: 199.99 },
+    { <span class="k">"name"</span>: "Tech Book Bundle", <span class="k">"price"</span>: 49.99 }
+  <span class="arr">]</span>
+}</div>
+      <div class="unfold-arrow"><span>LATERAL FLATTEN</span><span class="line"></span></div>
+      <table class="flat">
+        <tr><th>item_name</th><th>item_price</th></tr>
+        <tr><td>Wireless Headphones</td><td>199.99</td></tr>
+        <tr><td>Tech Book Bundle</td><td>49.99</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" style="margin-bottom:12px;">Why this, not another AI SQL tool</div>
+      <h2>Built for the case where AI SQL tools usually break.</h2>
+      <p>Deeply nested JSON, arrays inside arrays, sparse fields that only show up on some rows — that's where a model freehanding SQL gets quietly wrong. Here's what's different.</p>
+    </div>
+
+    <div class="benefits reveal">
+      <div class="benefit highlight">
+        <div class="glyph">$</div>
+        <h3>Costs a fraction of the alternative</h3>
+        <p>Runs on a lightweight model with a deterministic compiler underneath — dramatically cheaper per query than Snowflake's own native text-to-SQL offering.</p>
+      </div>
+      <div class="benefit">
+        <div class="glyph">✓</div>
+        <h3>Every answer is scored, not just shown</h3>
+        <p>Each candidate ships with a validation score and a named list of what's wrong — real path checks against your schema, not a vibe.</p>
+      </div>
+      <div class="benefit">
+        <div class="glyph">↺</div>
+        <h3>Wrong? Just say so</h3>
+        <p>Tell it what's off in plain English — "that's the wrong field" — and it corrects the same query instead of making you start over.</p>
+      </div>
+      <div class="benefit">
+        <div class="glyph">{}</div>
+        <h3>Handles real nesting, correctly</h3>
+        <p>Arrays inside arrays compile to properly chained <code>LATERAL FLATTEN</code> — the exact case that trips up freehand SQL generation.</p>
+      </div>
+      <div class="benefit">
+        <div class="glyph">⌂</div>
+        <h3>Your warehouse, not a new one</h3>
+        <p>It generates SQL for the Snowflake you already run. Nothing to migrate, nothing new to host your data.</p>
+      </div>
+      <div class="benefit">
+        <div class="glyph">◇</div>
+        <h3>Small samples are enough</h3>
+        <p>The schema is inferred from a representative slice, not your whole table — and it stays honest about what it hasn't seen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="console">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" style="margin-bottom:12px;">The console</div>
+      <h2>Paste a sample. Ask a question.</h2>
+      <p>The schema is inferred from your sample, not assumed. Every candidate below is ranked before you ever run it.</p>
+    </div>
+
+    <div class="console reveal">
+      <div class="console-input">
+        <div class="field"><label>Table</label><div class="val">customer_data</div></div>
+        <div class="field"><label>Variant column</label><div class="val">raw_data</div></div>
+        <div class="field"><label>Question</label><div class="val">List all item names and prices in the transaction for evt_001.</div></div>
+        <div class="console-cta">
+          <p>This is a preview. Try it with your own data on the real console.</p>
+          <a href="console.html">Open console →</a>
+        </div>
+      </div>
+
+      <div class="console-output">
+        <div class="candidate">
+          <div class="candidate-head">
+            <span class="candidate-name">CandidateA · item grain</span>
+            <span class="stamp">validated · 100</span>
+          </div>
+          <div class="sql-block"><span class="kw">SELECT</span>
+  item:name::string <span class="kw">AS</span> item_name,
+  item:price::number <span class="kw">AS</span> item_price
+<span class="kw">FROM</span> lvl2
+<span class="kw">WHERE</span> event:event_id::string = <span class="str">'evt_001'</span>
+<span class="kw">LIMIT</span> 100</div>
+        </div>
+
+        <div class="candidate">
+          <div class="candidate-head">
+            <span class="candidate-name">CandidateB · event grain</span>
+            <span class="stamp flagged">flagged · 65</span>
+          </div>
+          <div class="sql-block"><span class="kw">SELECT</span>
+  event:transaction:items::variant <span class="kw">AS</span> items_raw
+<span class="kw">FROM</span> lvl1
+<span class="kw">LIMIT</span> 100</div>
+          <div class="issue-row">Missing FLATTEN for arrays: ['transaction:items[*]'] — array returned unflattened</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" style="margin-bottom:12px;">Correct it in plain English</div>
+      <h2>Wrong field? Just tell it.</h2>
+      <p>No need to rewrite your question from scratch — a correction updates the same query, re-validated before it's shown back to you.</p>
+    </div>
+    <div class="correction reveal">
+      <div class="correction-turn user">
+        <span class="who">You</span>
+        <div class="correction-msg">That's the wrong field — I want the tracking carrier, not the shipping method.</div>
+      </div>
+      <div class="correction-turn fix">
+        <span class="who">Fixed</span>
+        <div>
+          <div class="correction-msg">Updated the select and re-validated.</div>
+          <div class="correction-field"><span class="old">transaction:shipping:method</span> → <span class="new">transaction:shipping:tracking:carrier</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pipeline" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" style="margin-bottom:12px;">Under the hood</div>
+      <h2>Seven stages. Two kinds of trust.</h2>
+      <p>Some stages reason about intent — those call a model. Everything downstream of intent is deterministic code, tested independently of any model.</p>
+    </div>
+
+    <div class="pipeline-track reveal">
+      <div class="stage"><span class="tag det">deterministic</span><div class="name">schema_index</div><div class="desc">Cached per table shape</div></div>
+      <div class="stage"><span class="tag llm">model</span><div class="name">summarizer</div><div class="desc">Plain-language schema summary</div></div>
+      <div class="stage"><span class="tag llm">model</span><div class="name">intent</div><div class="desc">Question → structured spec</div></div>
+      <div class="stage"><span class="tag det">deterministic</span><div class="name">plan</div><div class="desc">Row-grain candidates, graph lookup</div></div>
+      <div class="stage"><span class="tag det">deterministic</span><div class="name">compile</div><div class="desc">Spec → SQL, no model involved</div></div>
+      <div class="stage"><span class="tag det">deterministic</span><div class="name">validate</div><div class="desc">Path + FLATTEN + GROUP BY checks</div></div>
+      <div class="stage"><span class="tag cond">conditional</span><div class="name">critic</div><div class="desc">Only runs if validation flags something</div></div>
+    </div>
+
+    <div class="legend">
+      <span><span class="dot" style="background:var(--brass)"></span>deterministic — tested, no model</span>
+      <span><span class="dot" style="background:var(--indigo)"></span>model call — reasons about intent only</span>
+      <span><span class="dot" style="border:1px dashed var(--line); background:transparent"></span>conditional — skipped when validation is clean</span>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="wrap">
+    <h2>Bring your own JSON. See what it finds.</h2>
+    <p>No signup. No sample data to fake — use your own.</p>
+    <a class="btn-primary" href="console.html">Open the console ↗</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Deterministic compiler · LangGraph pipeline · Snowflake VARIANT</p>
+    <div class="links">
+      <a href="#">GitHub</a>
+      <a href="#">Architecture decisions</a>
+      <a href="#">Findings</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.reveal:not(.in)');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  els.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

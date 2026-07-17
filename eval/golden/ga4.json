@@ -1,6 +1,7 @@
 {
   "schema_file": "data/sample_data_ga4.json",
   "description": "200 real rows from bigquery-public-data.ga4_obfuscated_sample_ecommerce. Richest/deepest schema of the three - key/value pivot arrays, string-encoded int64 timestamps, and several always-null branches (items[*], ecommerce.*) are all real, deliberate stress tests.",
+  "degradation_study_ids": ["ga4-01", "ga4-02", "ga4-03", "ga4-09"],
   "questions": [
     {
       "id": "ga4-01",

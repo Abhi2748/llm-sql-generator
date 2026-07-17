@@ -1,0 +1,3 @@
+# Comparison harness outputs (comparison_<timestamp>.json). Not committed by default.
+*
+!.gitignore

@@ -1,6 +1,7 @@
 {
   "schema_file": "data/sample_data_github.json",
   "description": "90 deduped real events from the GitHub public events API (5 pulls, deduped by id). Real distribution: 81 PushEvent, 6 CreateEvent, 3 DeleteEvent. No Issue/PR/Watch events showed up in this pull - see ecom-13-style adversarial question below for how that's used deliberately.",
+  "degradation_study_ids": ["gh-02", "gh-03", "gh-06", "gh-09"],
   "questions": [
     {
       "id": "gh-01",

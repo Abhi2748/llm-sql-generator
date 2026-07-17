@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Console — JSON → SQL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12141A;
+    --bg-raised:#181B22;
+    --bg-card:#1D202A;
+    --bg-input:#15171D;
+    --paper:#EDE9DC;
+    --paper-dim:#9B9A8E;
+    --brass:#D6A44E;
+    --brass-bg:#2b2413;
+    --indigo:#7C93E0;
+    --flag:#E0685A;
+    --flag-bg:#2c1815;
+    --line:#2A2E38;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--paper); font-family:var(--font-body); line-height:1.5; -webkit-font-smoothing:antialiased;}
+
+  header{border-bottom:1px solid var(--line); height:56px; display:flex; align-items:center; justify-content:space-between; padding:0 24px;}
+  .mark{display:flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:600; font-size:13.5px;}
+  .mark a{color:var(--paper); text-decoration:none; display:flex; align-items:center; gap:10px;}
+  .mark .glyph{width:24px; height:24px; border-radius:5px; background:var(--brass); color:var(--bg); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;}
+  .back{font-family:var(--font-mono); font-size:12.5px; color:var(--paper-dim); text-decoration:none;}
+  .status-pill{font-family:var(--font-mono); font-size:11px; color:var(--paper-dim); border:1px solid var(--line); border-radius:20px; padding:4px 12px; display:flex; align-items:center; gap:6px;}
+  .status-pill .d{width:6px; height:6px; border-radius:50%; background:var(--brass);}
+
+  .layout{
+    display:grid;
+    grid-template-columns:var(--panel-in-width, 420px) 10px 1fr;
+    height:calc(100vh - 56px);
+  }
+  .panel-in{border-right:none; padding:24px; overflow-y:auto; min-width:0;}
+  .panel-out{padding:24px; overflow-y:auto; min-width:0;}
+
+  .panel-split{
+    position:relative;
+    background:var(--bg);
+    border-left:1px solid var(--line);
+    border-right:1px solid var(--line);
+    cursor:col-resize;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    user-select:none;
+  }
+  .panel-split::before{
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left:50%;
+    width:1px;
+    transform:translateX(-50%);
+    background:var(--line);
+  }
+  .panel-split:hover, .layout.is-resizing .panel-split{
+    background:var(--bg-raised);
+  }
+  .panel-split:hover::before, .layout.is-resizing .panel-split::before{
+    background:var(--brass);
+  }
+  .split-btn{
+    position:relative;
+    z-index:1;
+    width:22px;
+    height:22px;
+    padding:0;
+    border:1px solid var(--line);
+    border-radius:4px;
+    background:var(--bg-card);
+    color:var(--paper-dim);
+    font-family:var(--font-mono);
+    font-size:10px;
+    line-height:1;
+    cursor:pointer;
+  }
+  .split-btn:hover{border-color:var(--brass); color:var(--brass);}
+  .layout.is-resizing{cursor:col-resize;}
+  .layout.is-resizing *{cursor:col-resize !important;}
+
+  .panel-in-tools{
+    display:flex;
+    justify-content:flex-end;
+    gap:6px;
+    margin:-8px 0 14px;
+  }
+  .panel-tool{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--paper-dim);
+    font-family:var(--font-mono);
+    font-size:11px;
+    padding:4px 9px;
+    border-radius:5px;
+    cursor:pointer;
+  }
+  .panel-tool:hover{border-color:var(--brass); color:var(--brass);}
+
+  .layout[data-panel-size="wide"] #jsonSample{min-height:280px;}
+  .layout[data-panel-size="narrow"] #jsonSample{min-height:120px;}
+
+  .step-label{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--brass); margin-bottom:8px; display:flex; align-items:center; gap:8px;}
+  .step-label .n{width:16px; height:16px; border-radius:4px; background:var(--brass-bg); color:var(--brass); display:flex; align-items:center; justify-content:center; font-size:9.5px;}
+  .field{margin-bottom:22px;}
+  .field label{display:block; font-family:var(--font-mono); font-size:11px; color:var(--paper-dim); margin-bottom:7px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  input, textarea{
+    width:100%; background:var(--bg-input); border:1px solid var(--line); border-radius:6px;
+    color:var(--paper); font-family:var(--font-mono); font-size:13px; padding:9px 11px;
+  }
+  input:focus, textarea:focus{outline:none; border-color:var(--brass);}
+  textarea{resize:vertical; line-height:1.6;}
+  #jsonSample{min-height:170px;}
+  #question{min-height:64px;}
+  .hint{font-size:11.5px; color:var(--paper-dim); margin-top:6px; line-height:1.5;}
+  .sample-actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; align-items:center;}
+  .sample-btn{
+    background:transparent; border:1px solid var(--line); color:var(--paper-dim);
+    font-family:var(--font-mono); font-size:11.5px; padding:6px 10px; border-radius:5px; cursor:pointer;
+  }
+  .sample-btn:hover{border-color:var(--brass); color:var(--brass);}
+  .sample-btn:disabled{opacity:.5; cursor:default;}
+  #jsonFileInput{display:none;}
+  .sample-btn.file-label{display:inline-block;}
+  .run-btn{
+    width:100%; background:var(--brass); color:var(--bg); border:none; border-radius:7px;
+    padding:13px; font-size:14px; font-weight:600; font-family:var(--font-body); cursor:pointer; margin-top:6px;
+  }
+  .run-btn:disabled{opacity:.5; cursor:default;}
+
+  .empty-state{height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:var(--paper-dim);}
+  .empty-state .ico{font-family:var(--font-mono); font-size:32px; color:var(--line); margin-bottom:16px;}
+  .empty-state h3{font-family:var(--font-body); font-size:15px; color:var(--paper); margin-bottom:6px; font-weight:500;}
+  .empty-state p{font-size:13px; max-width:280px;}
+
+  .trace-mini{display:flex; gap:6px; margin-bottom:24px; flex-wrap:wrap;}
+  .trace-chip{font-family:var(--font-mono); font-size:10.5px; padding:4px 9px; border-radius:20px; border:1px solid var(--line); color:var(--paper-dim);}
+  .trace-chip.done{border-color:var(--brass); color:var(--brass);}
+  .trace-chip.skip{opacity:.4;}
+
+  .candidate{background:var(--bg-card); border:1px solid var(--line); border-radius:10px; margin-bottom:16px; overflow:hidden;}
+  .candidate-head{display:flex; align-items:center; justify-content:space-between; padding:13px 18px; border-bottom:1px solid var(--line);}
+  .candidate-name{font-family:var(--font-mono); font-size:13px; font-weight:600;}
+  .candidate-name .grain{color:var(--paper-dim); font-weight:400;}
+  .stamp{font-family:var(--font-mono); font-size:11.5px; font-weight:600; padding:4px 11px; border-radius:20px; border:1px solid var(--brass); color:var(--brass);}
+  .stamp.flagged{border-color:var(--flag); color:var(--flag);}
+  .sql-block{font-family:var(--font-mono); font-size:12.5px; line-height:1.75; padding:18px; white-space:pre; overflow-x:auto; color:#c9c5b5;}
+  .sql-block .kw{color:var(--indigo);}
+  .sql-block .str{color:var(--brass);}
+  .issue-row{padding:10px 18px; font-size:12px; font-family:var(--font-mono); color:var(--flag); background:var(--flag-bg); border-top:1px solid var(--line);}
+  .meta-row{display:flex; gap:18px; padding:10px 18px; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:11px; color:var(--paper-dim);}
+
+  .error-banner{
+    display:none; margin-bottom:16px; padding:12px 16px; border-radius:8px;
+    background:var(--flag-bg); border:1px solid var(--flag); color:var(--flag);
+    font-family:var(--font-mono); font-size:12.5px; line-height:1.5; white-space:pre-wrap;
+  }
+  .error-banner.visible{display:block;}
+
+  .correction{
+    border:1px solid var(--line); border-radius:12px; background:var(--bg-card);
+    overflow:hidden; margin-top:8px; margin-bottom:24px;
+  }
+  .correction-turn{display:flex; gap:16px; padding:14px 18px; align-items:flex-start;}
+  .correction-turn:not(:last-child){border-bottom:1px solid var(--line);}
+  .correction-turn .who{
+    font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--paper-dim); width:60px; flex-shrink:0; padding-top:2px;
+  }
+  .correction-turn.user .who{color:var(--indigo);}
+  .correction-turn.fix .who{color:var(--brass);}
+  .correction-msg{font-size:13.5px; color:var(--paper); line-height:1.55; flex:1;}
+  .correction-form{display:flex; gap:10px; padding:14px 18px; align-items:center; border-top:1px solid var(--line);}
+  .correction-form input{flex:1;}
+  .correction-form button{
+    background:transparent; border:1px solid var(--brass); color:var(--brass);
+    font-family:var(--font-mono); font-size:12px; padding:9px 14px; border-radius:6px; cursor:pointer; white-space:nowrap;
+  }
+  .correction-form button:hover{background:var(--brass-bg);}
+  .correction-form button:disabled{opacity:.5; cursor:default;}
+
+  @media (max-width:860px){
+    .layout{
+      grid-template-columns:1fr;
+      height:auto;
+    }
+    .panel-split, .panel-in-tools{display:none;}
+    .panel-in{border-right:none; border-bottom:1px solid var(--line);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark"><a href="index.html"><span class="glyph">{}</span> json→sql</a></div>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <a class="back" href="index.html">← back to overview</a>
+    <span class="status-pill"><span class="d"></span>gpt-4o-mini</span>
+  </div>
+</header>
+
+<div class="layout" id="layout" data-panel-size="default">
+  <div class="panel-in" id="panelIn">
+    <div class="panel-in-tools">
+      <button type="button" class="panel-tool" id="panelContractBtn" title="Narrow input panel">Contract</button>
+      <button type="button" class="panel-tool" id="panelExpandBtn" title="Widen input panel">Expand</button>
+    </div>
+    <div class="step-label"><span class="n">1</span>Target table</div>
+    <div class="field">
+      <div class="row2">
+        <div>
+          <label>Table</label>
+          <input type="text" id="tableName" value="ecommerce" />
+        </div>
+        <div>
+          <label>Variant column</label>
+          <input type="text" id="jsonColumn" value="raw_data" />
+        </div>
+      </div>
+    </div>
+
+    <div class="step-label"><span class="n">2</span>JSON sample</div>
+    <div class="field">
+      <textarea id="jsonSample" placeholder='{"ecommerce_events": [ ... ]}'></textarea>
+      <div class="hint">A small, representative sample is enough — the schema is inferred from its shape, not its size. The SQL runs against your full table, not this sample.</div>
+      <div class="sample-actions">
+        <button class="sample-btn" type="button" id="loadSampleBtn">Load example sample</button>
+        <label class="sample-btn file-label" for="jsonFileInput" id="uploadSampleLabel">Upload JSON file</label>
+        <input type="file" id="jsonFileInput" accept=".json,application/json" />
+      </div>
+    </div>
+
+    <div class="step-label"><span class="n">3</span>Question</div>
+    <div class="field">
+      <textarea id="question" placeholder="e.g. Total revenue per product category"></textarea>
+    </div>
+
+    <button class="run-btn" type="button" id="generateBtn">Generate SQL</button>
+  </div>
+
+  <div class="panel-split" id="panelSplit" role="separator" aria-orientation="vertical" aria-label="Resize input panel" title="Drag to resize">
+    <button type="button" class="split-btn" id="splitContractBtn" title="Narrow input panel" aria-label="Contract">‹</button>
+    <button type="button" class="split-btn" id="splitExpandBtn" title="Widen input panel" aria-label="Expand">›</button>
+  </div>
+
+  <div class="panel-out">
+    <div class="error-banner" id="errorBanner"></div>
+
+    <div class="empty-state" id="empty-state">
+      <div class="ico">{ }</div>
+      <h3>Nothing generated yet</h3>
+      <p>Fill in a table, a JSON sample, and a question on the left, then generate. Ranked candidates with validation scores will appear here.</p>
+    </div>
+
+    <div id="results" style="display:none;">
+      <div class="trace-mini" id="traceMini"></div>
+      <div id="candidates"></div>
+      <div class="correction" id="correctionPanel">
+        <div id="correctionHistory"></div>
+        <form class="correction-form" id="correctionForm">
+          <input type="text" id="correctionInput" placeholder="Something wrong? Describe the fix…" autocomplete="off" />
+          <button type="submit" id="correctionBtn">Apply fix</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Local backend while undeployed. Change to the real deployed URL once it exists.
+  const API_BASE = "http://localhost:8000";
+
+  let conversationId = null;
+  let lastPayloadMeta = null;
+
+  const els = {
+    tableName: document.getElementById("tableName"),
+    jsonColumn: document.getElementById("jsonColumn"),
+    jsonSample: document.getElementById("jsonSample"),
+    question: document.getElementById("question"),
+    generateBtn: document.getElementById("generateBtn"),
+    loadSampleBtn: document.getElementById("loadSampleBtn"),
+    jsonFileInput: document.getElementById("jsonFileInput"),
+    uploadSampleLabel: document.getElementById("uploadSampleLabel"),
+    emptyState: document.getElementById("empty-state"),
+    results: document.getElementById("results"),
+    candidates: document.getElementById("candidates"),
+    traceMini: document.getElementById("traceMini"),
+    errorBanner: document.getElementById("errorBanner"),
+    correctionForm: document.getElementById("correctionForm"),
+    correctionInput: document.getElementById("correctionInput"),
+    correctionBtn: document.getElementById("correctionBtn"),
+    correctionHistory: document.getElementById("correctionHistory"),
+  };
+
+  function showError(message) {
+    els.errorBanner.textContent = message;
+    els.errorBanner.classList.add("visible");
+  }
+
+  function clearError() {
+    els.errorBanner.textContent = "";
+    els.errorBanner.classList.remove("visible");
+  }
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function highlightSql(sql) {
+    const escaped = escapeHtml(sql || "");
+    return escaped
+      .replace(/'([^']*)'/g, "<span class=\"str\">'$1'</span>")
+      .replace(
+        /\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|AS|AND|OR|JOIN|LEFT|INNER|LATERAL|FLATTEN|WITH|ASC|DESC)\b/gi,
+        (m) => `<span class="kw">${m}</span>`
+      );
+  }
+
+  function grainLabel(candidate) {
+    const assumptions = candidate.assumptions || {};
+    const grain = assumptions.grain || assumptions.row_model;
+    return grain ? ` · ${escapeHtml(String(grain))} grain` : "";
+  }
+
+  function renderTrace(data) {
+    const critic = data.critic_notes || {};
+    const skipped = critic.skipped === true || critic.reason === "validation_clean";
+    const chips = [
+      ["schema_index", true],
+      ["summarizer", true],
+      ["intent", true],
+      ["plan", true],
+      ["compile", true],
+      ["validate", true],
+      [skipped ? "critic — skipped" : "critic", !skipped],
+    ];
+    els.traceMini.innerHTML = chips
+      .map(([label, done]) => {
+        const cls = done ? "trace-chip done" : "trace-chip skip";
+        return `<span class="${cls}">${escapeHtml(label)}</span>`;
+      })
+      .join("");
+  }
+
+  function renderCandidates(ranked) {
+    const list = Array.isArray(ranked) ? ranked : [];
+    if (!list.length) {
+      els.candidates.innerHTML =
+        '<div class="issue-row">No ranked candidates returned.</div>';
+      return;
+    }
+    els.candidates.innerHTML = list
+      .map((c) => {
+        const issues = c.issues || [];
+        const flagged = issues.length > 0 || (typeof c.score === "number" && c.score < 90);
+        const stampClass = flagged ? "stamp flagged" : "stamp";
+        const stampText = flagged
+          ? `flagged · ${c.score ?? "?"}`
+          : `validated · ${c.score ?? "?"}`;
+        const issueHtml = issues
+          .map((iss) => `<div class="issue-row">${escapeHtml(String(iss))}</div>`)
+          .join("");
+        const paths = (c.paths_used || []).slice(0, 4).join(", ");
+        return `
+          <div class="candidate">
+            <div class="candidate-head">
+              <span class="candidate-name">${escapeHtml(c.name || "Candidate")}<span class="grain">${grainLabel(c)}</span></span>
+              <span class="${stampClass}">${escapeHtml(stampText)}</span>
+            </div>
+            <div class="sql-block">${highlightSql(c.sql || "")}</div>
+            ${issueHtml}
+            <div class="meta-row">
+              <span>${escapeHtml(String((c.paths_used || []).length))} paths</span>
+              <span>${paths ? escapeHtml(paths) : "—"}</span>
+            </div>
+          </div>`;
+      })
+      .join("");
+  }
+
+  function showResults(data) {
+    els.emptyState.style.display = "none";
+    els.results.style.display = "block";
+    renderTrace(data);
+    renderCandidates(data.ranked_candidates || []);
+  }
+
+  function setBusy(busy, label) {
+    els.generateBtn.disabled = busy;
+    els.generateBtn.textContent = busy ? (label || "Generating…") : "Generate SQL";
+    els.correctionBtn.disabled = busy;
+    els.loadSampleBtn.disabled = busy;
+    if (els.uploadSampleLabel) {
+      els.uploadSampleLabel.style.pointerEvents = busy ? "none" : "";
+      els.uploadSampleLabel.style.opacity = busy ? "0.5" : "";
+    }
+    els.jsonFileInput.disabled = busy;
+  }
+
+  async function postJson(path, body) {
+    const res = await fetch(`${API_BASE}${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    let data = null;
+    try {
+      data = await res.json();
+    } catch (_) {
+      data = null;
+    }
+    if (!res.ok) {
+      const detail =
+        (data && (data.error || data.detail || JSON.stringify(data))) ||
+        `HTTP ${res.status}`;
+      const err = new Error(detail);
+      err.status = res.status;
+      err.body = data;
+      throw err;
+    }
+    return data;
+  }
+
+  async function onGenerate() {
+    clearError();
+    const question = els.question.value.trim();
+    const tableName = els.tableName.value.trim();
+    const jsonColumn = els.jsonColumn.value.trim();
+    const raw = els.jsonSample.value.trim();
+
+    if (!question) {
+      showError("Enter a question before generating.");
+      return;
+    }
+    if (!raw) {
+      showError("Paste a JSON sample (or load the example).");
+      return;
+    }
+
+    let jsonSample;
+    try {
+      jsonSample = JSON.parse(raw);
+    } catch (err) {
+      showError(`Invalid JSON in the sample textarea:\n${err.message}`);
+      return;
+    }
+
+    setBusy(true, "Generating…");
+    try {
+      const data = await postJson("/api/generate", {
+        question,
+        json_sample: jsonSample,
+        table_name: tableName || "ecommerce",
+        json_column: jsonColumn || "raw_data",
+        max_retries: 2,
+      });
+      conversationId = data.conversation_id || null;
+      lastPayloadMeta = { question, table_name: tableName, json_column: jsonColumn };
+      els.correctionHistory.innerHTML = "";
+      els.correctionInput.value = "";
+      showResults(data);
+      if (!conversationId) {
+        showError(
+          "Generation succeeded but no conversation_id was returned — corrections will not work until the API includes one."
+        );
+      }
+    } catch (err) {
+      showError(
+        err.message.includes("Failed to fetch")
+          ? `Could not reach ${API_BASE}. Is uvicorn running?\n(${err.message})`
+          : String(err.message || err)
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onCorrect(event) {
+    event.preventDefault();
+    clearError();
+    const userMessage = els.correctionInput.value.trim();
+    if (!userMessage) {
+      showError("Describe what to fix before applying a correction.");
+      return;
+    }
+    if (!conversationId) {
+      showError("No conversation yet — generate SQL first.");
+      return;
+    }
+
+    setBusy(true, "Correcting…");
+    els.correctionBtn.textContent = "Applying…";
+    try {
+      const data = await postJson("/api/chat", {
+        conversation_id: conversationId,
+        question: null,
+        user_message: userMessage,
+      });
+      if (data.conversation_id) conversationId = data.conversation_id;
+
+      const history = document.createElement("div");
+      history.className = "correction-turn user";
+      history.innerHTML = `<div class="who">you</div><div class="correction-msg">${escapeHtml(userMessage)}</div>`;
+      els.correctionHistory.appendChild(history);
+
+      const fix = document.createElement("div");
+      fix.className = "correction-turn fix";
+      const notes =
+        (data.chat_correction && data.chat_correction.critique && data.chat_correction.critique.notes) ||
+        data.repair_notes ||
+        "Updated and re-validated.";
+      fix.innerHTML = `<div class="who">fix</div><div class="correction-msg">${escapeHtml(String(notes))}</div>`;
+      els.correctionHistory.appendChild(fix);
+
+      els.correctionInput.value = "";
+      showResults(data);
+    } catch (err) {
+      if (err.body && err.body.conversation_expired) {
+        conversationId = null;
+        showError(
+          (err.body.error ||
+            "This conversation has expired or the server restarted.") +
+            "\nAsk a fresh question with Generate SQL."
+        );
+      } else {
+        showError(
+          err.message.includes("Failed to fetch")
+            ? `Could not reach ${API_BASE}. Is uvicorn running?\n(${err.message})`
+            : String(err.message || err)
+        );
+      }
+    } finally {
+      setBusy(false);
+      els.correctionBtn.textContent = "Apply fix";
+    }
+  }
+
+  const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB — representative sample, not a dump
+
+  function fillJsonSample(data) {
+    // Shared rendering path for load-example and upload.
+    els.jsonSample.value = JSON.stringify(data, null, 2);
+  }
+
+  async function onLoadSample() {
+    clearError();
+    els.loadSampleBtn.disabled = true;
+    try {
+      // Served from public/ alongside console.html (copied from repo data/).
+      const res = await fetch("data/sample_data.json");
+      if (!res.ok) throw new Error(`HTTP ${res.status} loading data/sample_data.json`);
+      const data = await res.json();
+      fillJsonSample(data);
+      if (!els.tableName.value.trim()) els.tableName.value = "ecommerce";
+      if (!els.jsonColumn.value.trim()) els.jsonColumn.value = "raw_data";
+      if (!els.question.value.trim()) {
+        els.question.value = "List the shipping carrier used for each event.";
+      }
+    } catch (err) {
+      showError(`Could not load example sample:\n${err.message}`);
+    } finally {
+      els.loadSampleBtn.disabled = false;
+    }
+  }
+
+  function onUploadSample(event) {
+    clearError();
+    const input = event.target;
+    const file = input.files && input.files[0];
+    // Always reset so re-selecting the same file fires change again.
+    input.value = "";
+    if (!file) return;
+
+    if (file.size > MAX_UPLOAD_BYTES) {
+      showError("File too large - paste a smaller representative sample instead");
+      return;
+    }
+
+    const name = (file.name || "").toLowerCase();
+    const type = (file.type || "").toLowerCase();
+    const looksJson =
+      name.endsWith(".json") ||
+      type === "application/json" ||
+      type === "text/json";
+    if (!looksJson) {
+      showError("Invalid JSON in the sample textarea:\nExpected a .json file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onerror = () => {
+      showError(`Invalid JSON in the sample textarea:\nCould not read file (${reader.error && reader.error.message})`);
+    };
+    reader.onload = () => {
+      try {
+        const text = String(reader.result || "");
+        const data = JSON.parse(text);
+        fillJsonSample(data);
+      } catch (err) {
+        showError(`Invalid JSON in the sample textarea:\n${err.message}`);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  els.generateBtn.addEventListener("click", onGenerate);
+  els.loadSampleBtn.addEventListener("click", onLoadSample);
+  els.jsonFileInput.addEventListener("change", onUploadSample);
+  els.correctionForm.addEventListener("submit", onCorrect);
+
+  // --- Input panel expand / contract / drag-resize ---
+  const PANEL_MIN = 300;
+  const PANEL_MAX_RATIO = 0.72;
+  const PANEL_PRESETS = { narrow: 320, default: 420, wide: 560 };
+  const PANEL_STORAGE_KEY = "console-panel-in-width";
+  const layoutEl = document.getElementById("layout");
+  const panelSplit = document.getElementById("panelSplit");
+
+  function panelMax() {
+    return Math.floor(window.innerWidth * PANEL_MAX_RATIO);
+  }
+
+  function clampPanelWidth(px) {
+    return Math.max(PANEL_MIN, Math.min(panelMax(), Math.round(px)));
+  }
+
+  function panelSizeLabel(width) {
+    if (width <= (PANEL_PRESETS.narrow + PANEL_PRESETS.default) / 2) return "narrow";
+    if (width >= (PANEL_PRESETS.default + PANEL_PRESETS.wide) / 2) return "wide";
+    return "default";
+  }
+
+  function setPanelWidth(px, { persist = true } = {}) {
+    const width = clampPanelWidth(px);
+    layoutEl.style.setProperty("--panel-in-width", `${width}px`);
+    layoutEl.dataset.panelSize = panelSizeLabel(width);
+    if (persist) {
+      try {
+        localStorage.setItem(PANEL_STORAGE_KEY, String(width));
+      } catch (_) {}
+    }
+  }
+
+  function nudgePanel(delta) {
+    const current =
+      parseInt(getComputedStyle(layoutEl).getPropertyValue("--panel-in-width"), 10) ||
+      PANEL_PRESETS.default;
+    setPanelWidth(current + delta);
+  }
+
+  (function initPanelWidth() {
+    let stored = null;
+    try {
+      stored = parseInt(localStorage.getItem(PANEL_STORAGE_KEY) || "", 10);
+    } catch (_) {}
+    setPanelWidth(Number.isFinite(stored) ? stored : PANEL_PRESETS.default, { persist: false });
+  })();
+
+  document.getElementById("panelExpandBtn").addEventListener("click", () => nudgePanel(80));
+  document.getElementById("panelContractBtn").addEventListener("click", () => nudgePanel(-80));
+  document.getElementById("splitExpandBtn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    nudgePanel(80);
+  });
+  document.getElementById("splitContractBtn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    nudgePanel(-80);
+  });
+
+  let resizing = false;
+  panelSplit.addEventListener("pointerdown", (e) => {
+    if (e.target.closest(".split-btn")) return;
+    resizing = true;
+    layoutEl.classList.add("is-resizing");
+    panelSplit.setPointerCapture(e.pointerId);
+  });
+  panelSplit.addEventListener("pointermove", (e) => {
+    if (!resizing) return;
+    const rect = layoutEl.getBoundingClientRect();
+    setPanelWidth(e.clientX - rect.left);
+  });
+  function endResize(e) {
+    if (!resizing) return;
+    resizing = false;
+    layoutEl.classList.remove("is-resizing");
+    try {
+      panelSplit.releasePointerCapture(e.pointerId);
+    } catch (_) {}
+  }
+  panelSplit.addEventListener("pointerup", endResize);
+  panelSplit.addEventListener("pointercancel", endResize);
+
+  window.addEventListener("resize", () => {
+    const current =
+      parseInt(getComputedStyle(layoutEl).getPropertyValue("--panel-in-width"), 10) ||
+      PANEL_PRESETS.default;
+    setPanelWidth(current, { persist: false });
+  });
+</script>
+
+</body>
+</html>

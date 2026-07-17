@@ -73,8 +73,7 @@ class FakeLLM:
             self.critic_calls += 1
             return _Resp(json.dumps({"should_retry": False, "top_issues": [], "repairs": None, "notes": ""}))
 
-        if "apply patches" in system and "query_spec" in system:
-            return _Resp(json.dumps({"query_spec": {}, "plan": {}, "notes": ""}))
+        # repair_agent is deterministic (ADR 0003) — no LLM branch needed.
 
         return _Resp(json.dumps({}))
 
@@ -158,7 +157,10 @@ class TestGraphMockLLM(unittest.TestCase):
         self.assertGreaterEqual(validation.get("top_score"), 90)
         self.assertEqual(ranked[0].get("issues") or [], [])
         self.assertEqual(llm.critic_calls, 0)
-        self.assertIsNone(result.get("critic_notes"))
+        self.assertEqual(
+            result.get("critic_notes"),
+            {"skipped": True, "reason": "validation_clean"},
+        )
 
     def test_critic_runs_when_validation_dirty(self):
         with open(os.path.join("data", "sample_data.json"), "r", encoding="utf-8") as f:

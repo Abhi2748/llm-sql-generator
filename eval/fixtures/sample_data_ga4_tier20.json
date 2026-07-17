@@ -1,0 +1,2976 @@
+{
+  "events": [
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612069510766593",
+      "event_name": "page_view",
+      "event_params": [
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "all_data",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "entrances",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "0",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "661084800",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "clean_event",
+          "value": {
+            "string_value": "gtm.js",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Home",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "6595101026",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1026454.4271112504",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612069510766593",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "13.1"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "California",
+        "city": "San Carlos",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612069529243877",
+      "event_name": "scroll",
+      "event_params": [
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "1",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "661084800",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Home",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "percent_scrolled",
+          "value": {
+            "string_value": null,
+            "int_value": "90",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engagement_time_msec",
+          "value": {
+            "string_value": null,
+            "int_value": "11873",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "9011338476",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1026454.4271112504",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612069510766593",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "13.1"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "California",
+        "city": "San Carlos",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612069515781635",
+      "event_name": "page_view",
+      "event_params": [
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engagement_time_msec",
+          "value": {
+            "string_value": null,
+            "int_value": "3",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Home",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "661084800",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "1",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-6830522854",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1026454.4271112504",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612069510766593",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "13.1"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "California",
+        "city": "San Carlos",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612069530073506",
+      "event_name": "user_engagement",
+      "event_params": [
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "661084800",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Home",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "1",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engagement_time_msec",
+          "value": {
+            "string_value": null,
+            "int_value": "5819",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-8264942910",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1026454.4271112504",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612069510766593",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "13.1"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "California",
+        "city": "San Carlos",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612069510766593",
+      "event_name": "session_start",
+      "event_params": [
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "661084800",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Home",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "6595101026",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1026454.4271112504",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612069510766593",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "13.1"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "California",
+        "city": "San Carlos",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612069510766593",
+      "event_name": "first_visit",
+      "event_params": [
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "661084800",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Home",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "6595101026",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1026454.4271112504",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612069510766593",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "13.1"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "California",
+        "city": "San Carlos",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612111667188347",
+      "event_name": "session_start",
+      "event_params": [
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "9367134771",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-2377566162",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1029692.9551304564",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612111667188347",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "14.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "New York",
+        "city": "New York",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612111667188347",
+      "event_name": "first_visit",
+      "event_params": [
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "9367134771",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-2377566162",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1029692.9551304564",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612111667188347",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "14.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "New York",
+        "city": "New York",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612111672202517",
+      "event_name": "page_view",
+      "event_params": [
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "9367134771",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engagement_time_msec",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "1",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "2958840217",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1029692.9551304564",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612111667188347",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "14.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "New York",
+        "city": "New York",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612111667188347",
+      "event_name": "page_view",
+      "event_params": [
+        {
+          "key": "all_data",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "9367134771",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "entrances",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "0",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "clean_event",
+          "value": {
+            "string_value": "gtm.js",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-2377566162",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1029692.9551304564",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612111667188347",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "14.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "New York",
+        "city": "New York",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612111672464586",
+      "event_name": "user_engagement",
+      "event_params": [
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engagement_time_msec",
+          "value": {
+            "string_value": null,
+            "int_value": "5273",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "1",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "9367134771",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "9262234012",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1029692.9551304564",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612111667188347",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "Apple",
+        "mobile_model_name": "iPhone",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Safari",
+          "browser_version": "14.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "New York",
+        "city": "New York",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612066896873827",
+      "event_name": "user_engagement",
+      "event_params": [
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engagement_time_msec",
+          "value": {
+            "string_value": null,
+            "int_value": "14202",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "7136977879",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "1",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-8116520843",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1031480.8260955562",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612066882613427",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "desktop",
+        "mobile_brand_name": "Google",
+        "mobile_model_name": "Chrome",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "87.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "(not set)",
+        "city": "(not set)",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612066887624268",
+      "event_name": "page_view",
+      "event_params": [
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "7136977879",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "1",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engagement_time_msec",
+          "value": {
+            "string_value": null,
+            "int_value": "4",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "6304919096",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1031480.8260955562",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612066882613427",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "desktop",
+        "mobile_brand_name": "Google",
+        "mobile_model_name": "Chrome",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "87.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "(not set)",
+        "city": "(not set)",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612066882613427",
+      "event_name": "first_visit",
+      "event_params": [
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "7136977879",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "1630445792",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1031480.8260955562",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612066882613427",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "desktop",
+        "mobile_brand_name": "Google",
+        "mobile_model_name": "Chrome",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "87.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "(not set)",
+        "city": "(not set)",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612066882613427",
+      "event_name": "page_view",
+      "event_params": [
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "clean_event",
+          "value": {
+            "string_value": "gtm.js",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclsrc",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "all_data",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "gclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "0",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "7136977879",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "entrances",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "1630445792",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1031480.8260955562",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612066882613427",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "desktop",
+        "mobile_brand_name": "Google",
+        "mobile_model_name": "Chrome",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "87.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "(not set)",
+        "city": "(not set)",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612066882613427",
+      "event_name": "session_start",
+      "event_params": [
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "7136977879",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Apparel",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Apparel | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "1630445792",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1031480.8260955562",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612066882613427",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "desktop",
+        "mobile_brand_name": "Google",
+        "mobile_model_name": "Chrome",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "<Other>",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-us",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "87.0"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "(not set)",
+        "city": "(not set)",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "organic",
+        "name": "(organic)",
+        "source": "google"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612080240052555",
+      "event_name": "session_start",
+      "event_params": [
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Bags | Lifestyle | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "6522151802",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Lifestyle/Bags",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-7994936197",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1034924.6134685361",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612080240052555",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "<Other>",
+        "mobile_model_name": "<Other>",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "10",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-gb",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "<Other>"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "Massachusetts",
+        "city": "Boston",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "(none)",
+        "name": "(direct)",
+        "source": "(direct)"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612080240052555",
+      "event_name": "first_visit",
+      "event_params": [
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "6522151802",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Bags | Lifestyle | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Lifestyle/Bags",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-7994936197",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1034924.6134685361",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612080240052555",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "<Other>",
+        "mobile_model_name": "<Other>",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "10",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-gb",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "<Other>"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "Massachusetts",
+        "city": "Boston",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "(none)",
+        "name": "(direct)",
+        "source": "(direct)"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612080245394754",
+      "event_name": "page_view",
+      "event_params": [
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "dclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "6522151802",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Lifestyle/Bags",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "1",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Bags | Lifestyle | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "2448461602",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1034924.6134685361",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612080240052555",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "<Other>",
+        "mobile_model_name": "<Other>",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "10",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-gb",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "<Other>"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "Massachusetts",
+        "city": "Boston",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "(none)",
+        "name": "(direct)",
+        "source": "(direct)"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    },
+    {
+      "event_date": "20210131",
+      "event_timestamp": "1612080240052555",
+      "event_name": "page_view",
+      "event_params": [
+        {
+          "key": "engaged_session_event",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_id",
+          "value": {
+            "string_value": null,
+            "int_value": "6522151802",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "ga_session_number",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "session_engaged",
+          "value": {
+            "string_value": "0",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "entrances",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_title",
+          "value": {
+            "string_value": "Bags | Lifestyle | Google Merchandise Store",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "dclid",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "debug_mode",
+          "value": {
+            "string_value": null,
+            "int_value": "1",
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "page_location",
+          "value": {
+            "string_value": "https://shop.googlemerchandisestore.com/Google+Redesign/Lifestyle/Bags",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "all_data",
+          "value": {
+            "string_value": null,
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        },
+        {
+          "key": "clean_event",
+          "value": {
+            "string_value": "gtm.js",
+            "int_value": null,
+            "float_value": null,
+            "double_value": null
+          }
+        }
+      ],
+      "event_previous_timestamp": null,
+      "event_value_in_usd": null,
+      "event_bundle_sequence_id": "-7994936197",
+      "event_server_timestamp_offset": null,
+      "user_id": null,
+      "user_pseudo_id": "1034924.6134685361",
+      "privacy_info": {
+        "analytics_storage": null,
+        "ads_storage": null,
+        "uses_transient_token": "No"
+      },
+      "user_properties": [],
+      "user_first_touch_timestamp": "1612080240052555",
+      "user_ltv": {
+        "revenue": "0.0",
+        "currency": "USD"
+      },
+      "device": {
+        "category": "mobile",
+        "mobile_brand_name": "<Other>",
+        "mobile_model_name": "<Other>",
+        "mobile_marketing_name": "<Other>",
+        "mobile_os_hardware_model": null,
+        "operating_system": "Web",
+        "operating_system_version": "10",
+        "vendor_id": null,
+        "advertising_id": null,
+        "language": "en-gb",
+        "is_limited_ad_tracking": "No",
+        "time_zone_offset_seconds": null,
+        "web_info": {
+          "browser": "Chrome",
+          "browser_version": "<Other>"
+        }
+      },
+      "geo": {
+        "continent": "Americas",
+        "sub_continent": "Northern America",
+        "country": "United States",
+        "region": "Massachusetts",
+        "city": "Boston",
+        "metro": "(not set)"
+      },
+      "app_info": null,
+      "traffic_source": {
+        "medium": "(none)",
+        "name": "(direct)",
+        "source": "(direct)"
+      },
+      "stream_id": "2100450278",
+      "platform": "WEB",
+      "event_dimensions": null,
+      "ecommerce": {
+        "total_item_quantity": null,
+        "purchase_revenue_in_usd": null,
+        "purchase_revenue": null,
+        "refund_value_in_usd": null,
+        "refund_value": null,
+        "shipping_value_in_usd": null,
+        "shipping_value": null,
+        "tax_value_in_usd": null,
+        "tax_value": null,
+        "unique_items": null,
+        "transaction_id": null
+      },
+      "items": []
+    }
+  ]
+}

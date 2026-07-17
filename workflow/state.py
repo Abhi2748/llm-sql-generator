@@ -31,6 +31,11 @@ class WorkflowState(TypedDict, total=False):
     retry_count: int
     max_retries: int
 
+    # Debug: per-pass snapshots through the compile/validate/critic loop
+    iteration_history: List[Dict[str, Any]]
+    loop_exit_reason: str
+    retry_exhausted_unresolved: bool
+
     # Final
     final: Dict[str, Any]
 

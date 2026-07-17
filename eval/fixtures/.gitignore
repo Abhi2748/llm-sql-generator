@@ -1,0 +1,6 @@
+# Generated prefix-tier fixtures for degradation study (see tiered_samples.py).
+*
+!.gitignore
+!tiered_samples.py
+!__init__.py
+!*_tier*.json
